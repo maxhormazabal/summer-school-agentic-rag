@@ -11,7 +11,8 @@
       "Bash(.venv/bin/python tutorial.py stage2 --inspect 2)",
       "Bash(.venv/bin/python tutorial.py stage3)",
       "Bash(.venv/bin/python tutorial.py stage4 ask \"¿Cuál fue el marcador entre Cirera y L'Estartit?\")",
-      "Bash(.venv/bin/python tutorial.py demo)"
+      "Bash(.venv/bin/python tutorial.py demo)",
+      "Bash(.venv/bin/jupyter nbconvert *)"
     ]
   }
 }

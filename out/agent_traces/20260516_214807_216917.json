@@ -1,0 +1,89 @@
+{
+  "question": "Lista los goles marcados antes del minuto 30.",
+  "cypher_attempts": [
+    {
+      "query": "MATCH (m:Match)-[:HAS_GOAL]->(g:Goal) WHERE g.minute < 30 RETURN g.id, g.minute, g.scorer_name, g.scoring_team, g.type",
+      "ok": true,
+      "error": null,
+      "rows": 0
+    },
+    {
+      "query": "MATCH (m:Match)-[:HAS_GOAL]->(g:Goal) WHERE g.minute < 30 RETURN g.id, g.minute, g.scorer_name, g.scoring_team, g.type",
+      "ok": true,
+      "error": null,
+      "rows": 5
+    }
+  ],
+  "answer": "Aquí tienes una lista de los goles marcados antes del minuto 30:\n\n1. Minuto 12: Gol de Fiona Espada Rubio para el equipo visitante (tipo: regular).\n2. Minuto 18: Gol de Marwa Karim Abdelbaki para el equipo local (tipo: regular).\n3. Minuto 22: Gol de Laia Torres Díaz para el equipo local (tipo: regular).\n4. Minuto 25: Gol de Laura Massotti para el equipo visitante (tipo: regular).\n5. Minuto 25: Gol de Carla Puiggros Cama para el equipo visitante (tipo: regular).",
+  "messages": [
+    {
+      "role": "system",
+      "content": "Eres un asistente experto que responde preguntas sobre actas de partidos de fútbol de la FCF (Federació Catalana de Futbol) consultando un grafo Neo4J.\n\nTienes acceso a tres herramientas:\n1. get_graph_schema — Devuelve el esquema completo del grafo (labels, relaciones, propiedades, ejemplos).\n2. validate_cypher — Valida la sintaxis de una query Cypher antes de ejecutarla.\n3. run_cypher — Ejecuta una query Cypher de lectura y devuelve las filas.\n\nREGLAS OBLIGATORIAS:\n- Antes de ejecutar cualquier query nueva, llama a validate_cypher para verificar su sintaxis.\n- Para buscar entidades por nombre, normaliza el texto con toUpper() y compara contra la propiedad id.\n  Ejemplo: WHERE p.id CONTAINS toUpper('garcia')\n- Si una consulta devuelve filas vacías, reformúlala una vez relajando los filtros (p.ej., búsqueda parcial);\n  si sigue sin resultados, admite honestamente que no encuentras la información.\n- Nunca inventes labels, propiedades o relaciones que no estén en el schema.\n- La respuesta final al usuario debe ser concisa, directa y en español.\n- No muestres el Cypher al usuario en la respuesta final salvo que lo pida explícitamente.\n"
+    },
+    {
+      "role": "user",
+      "content": "Lista los goles marcados antes del minuto 30."
+    },
+    {
+      "role": "assistant",
+      "annotations": [],
+      "tool_calls": [
+        {
+          "id": "call_K2Tfh0fAacapXeiN6pLaYdPf",
+          "function": {
+            "arguments": "{}",
+            "name": "get_graph_schema"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_K2Tfh0fAacapXeiN6pLaYdPf",
+      "content": "\"La base de datos contiene información sobre partidos de fútbol de la FCF (Federació Catalana de Futbol).\\n\\nNodos y propiedades principales:\\n- Match: id (string único), journey (int), competition, status, score_home (int), score_away (int)\\n- Team: id (nombre normalizado), name\\n- Player: id (nombre normalizado), name\\n- Coach: id (nombre normalizado), name, role_code\\n- Stadium: id (nombre normalizado), name, address\\n- Referee: id (nombre normalizado), name, committee\\n- Goal: id, minute (int), scoreline_home (int), scoreline_away (int), scorer_name, scoring_team (\\\"home\\\"/\\\"away\\\"), type (\\\"regular\\\"/\\\"own\\\"/\\\"penalty\\\")\\n- Card: id, minute (int), color (\\\"yellow\\\"/\\\"red\\\"), target_kind (\\\"player\\\"/\\\"coach\\\"), target_name, team (\\\"home\\\"/\\\"away\\\")\\n\\nRelaciones:\\n- (Match)-[:HOME_TEAM]->(Team)\\n- (Match)-[:AWAY_TEAM]->(Team)\\n- (Match)-[:PLAYED_AT]->(Stadium)\\n- (Match)-[:OFFICIATED_BY]->(Referee)\\n- (Match)-[:HAS_GOAL]->(Goal)\\n- (Match)-[:HAS_CARD]->(Card)\\n- (Goal)-[:SCORED_BY]->(Player)\\n- (Goal)-[:FOR_TEAM]->(Team)\\n- (Card)-[:GIVEN_TO_PLAYER]->(Player)\\n- (Card)-[:GIVEN_TO_COACH]->(Coach)\\n- (Card)-[:AGAINST]->(Team)\\n- (Player)-[:APPEARED_IN {role, jersey}]->(Match)\\n- (Player)-[:PLAYS_FOR {match_id}]->(Team)\\n- (Coach)-[:COACHED {match_id}]->(Team)\\n\\nConvenciones de búsqueda:\\n- Los IDs son nombres normalizados: sin acentos, en MAYÚSCULAS, espacios colapsados.\\n- Para buscar por nombre de jugadora o equipo usa: WHERE p.id CONTAINS toUpper('nombre')\\n- Ejemplo: MATCH (p:Player) WHERE p.id CONTAINS toUpper('garcia') RETURN p.name\\n- Para filtros de texto parcial también puedes usar: WHERE toLower(p.name) CONTAINS toLower('garcia')\\n\\nLabels en el grafo: Card, Coach, Goal, Match, Player, Referee, Stadium, Team\\nTipos de relación: AGAINST, APPEARED_IN, AWAY_TEAM, COACHED, FOR_TEAM, GIVEN_TO_COACH, GIVEN_TO_PLAYER, HAS_CARD, HAS_GOAL, HOME_TEAM, OFFICIATED_BY, PLAYED_AT, PLAYS_FOR, SCORED_BY\\n\""
+    },
+    {
+      "role": "assistant",
+      "annotations": [],
+      "tool_calls": [
+        {
+          "id": "call_CaRgp0IMAtSxPWdlbHt5FIcJ",
+          "function": {
+            "arguments": "{\"query\":\"MATCH (m:Match)-[:HAS_GOAL]->(g:Goal) WHERE g.minute < 30 RETURN g.id, g.minute, g.scorer_name, g.scoring_team, g.type\"}",
+            "name": "validate_cypher"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_CaRgp0IMAtSxPWdlbHt5FIcJ",
+      "content": "{\"ok\": true, \"error\": null}"
+    },
+    {
+      "role": "assistant",
+      "annotations": [],
+      "tool_calls": [
+        {
+          "id": "call_8917lQiz72ILutCpY35xoxcA",
+          "function": {
+            "arguments": "{\"query\":\"MATCH (m:Match)-[:HAS_GOAL]->(g:Goal) WHERE g.minute < 30 RETURN g.id, g.minute, g.scorer_name, g.scoring_team, g.type\"}",
+            "name": "run_cypher"
+          },
+          "type": "function"
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_8917lQiz72ILutCpY35xoxcA",
+      "content": "{\"rows\": [{\"g.id\": \"UNIFICACION C.F. SANTAPERPETUA A__VS__CERDANYOLA VALLES, F.C. A__J29__GOAL_0\", \"g.minute\": 12, \"g.scorer_name\": \"ESPADA RUBIO, FIONA\", \"g.scoring_team\": \"away\", \"g.type\": \"regular\"}, {\"g.id\": \"UNIFICACION C.F. SANTAPERPETUA A__VS__CERDANYOLA VALLES, F.C. A__J29__GOAL_1\", \"g.minute\": 25, \"g.scorer_name\": \"LAURA MASSOTTI\", \"g.scoring_team\": \"away\", \"g.type\": \"regular\"}, {\"g.id\": \"INTER GRANOLLERS, CLUB FUTBOL A__VS__ARO, C.E. A__J29__GOAL_0\", \"g.minute\": 18, \"g.scorer_name\": \"KARIM ABDELBAKI, MARWA\", \"g.scoring_team\": \"home\", \"g.type\": \"regular\"}, {\"g.id\": \"INTER GRANOLLERS, CLUB FUTBOL A__VS__ARO, C.E. A__J29__GOAL_1\", \"g.minute\": 22, \"g.scorer_name\": \"TORRES DÍAZ, LAIA\", \"g.scoring_team\": \"home\", \"g.type\": \"regular\"}, {\"g.id\": \"INTER GRANOLLERS, CLUB FUTBOL A__VS__ARO, C.E. A__J29__GOAL_2\", \"g.minute\": 25, \"g.scorer_name\": \"PUIGGROS CAMA, CARLA\", \"g.scoring_team\": \"away\", \"g.type\": \"regular\"}], \"error\": null}"
+    },
+    {
+      "role": "assistant",
+      "content": "Aquí tienes una lista de los goles marcados antes del minuto 30:\n\n1. Minuto 12: Gol de Fiona Espada Rubio para el equipo visitante (tipo: regular).\n2. Minuto 18: Gol de Marwa Karim Abdelbaki para el equipo local (tipo: regular).\n3. Minuto 22: Gol de Laia Torres Díaz para el equipo local (tipo: regular).\n4. Minuto 25: Gol de Laura Massotti para el equipo visitante (tipo: regular).\n5. Minuto 25: Gol de Carla Puiggros Cama para el equipo visitante (tipo: regular)."
+    }
+  ]
+}
