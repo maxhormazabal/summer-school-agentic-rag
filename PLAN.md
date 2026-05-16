@@ -564,31 +564,32 @@ Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptació
   - [x] `python tutorial.py stage1` corre sin errores.
   - [x] Test de validación de un `MatchExtraction` sintético pasa.
 
-- [ ] **Etapa 2 — Extracción VLM**
-  - [ ] `src/extraction/pdf_to_images.py` convierte los 3 PDFs.
-  - [ ] `src/extraction/vlm_extractor.py::extract()` usa structured outputs.
-  - [ ] `data/extracted/example{1,2,3}.json` existen y validan.
-  - [ ] Para cada uno, `len(goals) == score_home + score_away`.
-  - [ ] Cada `scorer_name` matchea con su `lineup` correspondiente (con normalización).
-  - [ ] `tutorial.py stage2 --inspect 1` muestra imagen + JSON.
+- [~] **Etapa 2 — Extracción VLM**
+  - [x] `src/extraction/pdf_to_images.py` convierte los 3 PDFs.
+  - [x] `src/extraction/vlm_extractor.py::extract()` usa structured outputs.
+  - [ ] `data/extracted/example{1,2,3}.json` existen y validan. ← PENDIENTE: requiere OPENAI_API_KEY
+  - [ ] Para cada uno, `len(goals) == score_home + score_away`. ← PENDIENTE: requiere extracción
+  - [ ] Cada `scorer_name` matchea con su `lineup` correspondiente (con normalización). ← PENDIENTE
+  - [ ] `tutorial.py stage2 --inspect 1` muestra imagen + JSON. ← PENDIENTE
 
-- [ ] **Etapa 3 — Grafo Neo4J**
-  - [ ] `src/graph/neo4j_client.py`, `constraints.py`, `ingest.py` implementados.
-  - [ ] `ingest_all()` inserta sin error.
-  - [ ] Segunda ejecución no duplica nodos (counts iguales).
-  - [ ] `render_graph()` produce `out/graph.html` autocontenido.
-  - [ ] `graph_schema_summary()` devuelve string usable por el agente.
+- [~] **Etapa 3 — Grafo Neo4J**
+  - [x] `src/graph/neo4j_client.py`, `constraints.py`, `ingest.py` implementados.
+  - [ ] `ingest_all()` inserta sin error. ← PENDIENTE: requiere credenciales Neo4J + JSONs extraídos
+  - [ ] Segunda ejecución no duplica nodos (counts iguales). ← PENDIENTE
+  - [ ] `render_graph()` produce `out/graph.html` autocontenido. ← PENDIENTE
+  - [x] `graph_schema_summary()` devuelve string usable por el agente.
 
-- [ ] **Etapa 4 — Agente**
-  - [ ] `src/agent/tools.py` con las 3 funciones + filtro read-only operativo.
-  - [ ] `src/agent/agent.py::ask()` completa el loop con tool-calling.
-  - [ ] Trazas guardadas en `out/agent_traces/`.
-  - [ ] Pregunta 1 de demo responde correctamente.
+- [~] **Etapa 4 — Agente**
+  - [x] `src/agent/tools.py` con las 3 funciones + filtro read-only operativo.
+  - [x] `src/agent/agent.py::ask()` completa el loop con tool-calling.
+  - [ ] Trazas guardadas en `out/agent_traces/`. ← PENDIENTE: requiere credenciales
+  - [ ] Pregunta 1 de demo responde correctamente. ← PENDIENTE
 
-- [ ] **Etapa 5 — Orquestador y demo**
-  - [ ] `tutorial.py demo` ejecuta las 6 preguntas sin crashear.
-  - [ ] Al menos una traza muestra reintento exitoso tras error.
-  - [ ] `tutorial.py all` corre end-to-end desde cero.
+- [~] **Etapa 5 — Orquestador y demo**
+  - [x] `tutorial.py demo` subcomando implementado con las 6 preguntas.
+  - [ ] `tutorial.py demo` ejecuta las 6 preguntas sin crashear. ← PENDIENTE: requiere credenciales
+  - [ ] Al menos una traza muestra reintento exitoso tras error. ← PENDIENTE
+  - [ ] `tutorial.py all` corre end-to-end desde cero. ← PENDIENTE
 
 ---
 
