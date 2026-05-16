@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import copy
 import json
 from pathlib import Path
 
@@ -9,6 +10,39 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from src.common.config import get_secret
 from src.common.logging import console
 from src.ontology.schema import MatchExtraction
+
+
+def _prepare_schema(schema: dict) -> dict:
+    """Prepare a Pydantic JSON schema for OpenAI structured outputs strict mode.
+
+    Two fixes are needed:
+    1. $ref cannot have sibling keywords (e.g. description) — inline all $refs.
+    2. Every property of every object must appear in required (even nullable ones).
+    """
+    schema = copy.deepcopy(schema)
+    defs = schema.pop("$defs", {})
+
+    def resolve(obj: object) -> object:
+        if isinstance(obj, dict):
+            # Inline $ref first
+            if "$ref" in obj:
+                ref_name = obj["$ref"].split("/")[-1]
+                resolved = copy.deepcopy(defs.get(ref_name, {}))
+                for k, v in obj.items():
+                    if k != "$ref":
+                        resolved[k] = v
+                return resolve(resolved)
+            # Recurse values
+            result = {k: resolve(v) for k, v in obj.items()}
+            # Ensure all properties are in required (OpenAI strict mode requirement)
+            if "properties" in result and isinstance(result["properties"], dict):
+                result["required"] = list(result["properties"].keys())
+            return result
+        if isinstance(obj, list):
+            return [resolve(item) for item in obj]
+        return obj
+
+    return resolve(schema)  # type: ignore[return-value]
 
 _SYSTEM_PROMPT = """\
 Eres un asistente experto en extraer datos estructurados de actas oficiales de partidos de fútbol \
@@ -45,7 +79,7 @@ def extract(image_path: Path) -> MatchExtraction:
     from pydantic import ValidationError
 
     client = OpenAI(api_key=get_secret("OPENAI_API_KEY"))
-    schema = MatchExtraction.model_json_schema()
+    schema = _prepare_schema(MatchExtraction.model_json_schema())
 
     console.print(f"[cyan]VLM extracting {image_path.name}...[/cyan]")
     response = client.chat.completions.create(

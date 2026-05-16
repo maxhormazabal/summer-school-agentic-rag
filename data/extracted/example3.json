@@ -1,0 +1,337 @@
+{
+  "journey": 29,
+  "competition": "FCF",
+  "status": "ACTA TANCADA",
+  "score_home": 4,
+  "score_away": 4,
+  "home": {
+    "name": "INTER GRANOLLERS, CLUB FUTBOL A",
+    "lineup": [
+      {
+        "player": {
+          "name": "ALBA",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "VIÑAS TORRUELLA, MARIONA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "MORATO ROMERO, YULIA",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "RUIZ CONESA, NEERA",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "NAVIO PEREZ, LUCIA",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "FARRÉS ARMELA, QUERALT",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "KARIM ABDELBAKI, MARWA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "FUSTER GONZALEZ, EVA",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ANDREU LLIN, MIREIA",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "TORRES DÍAZ, LAIA",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ROS AYAS, ARIADNA",
+          "jersey": 12
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "VAZQUEZ PARDO, CARLOTA",
+          "jersey": 13
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LAS HERAS AIXANDRI, SARA",
+          "jersey": 14
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "NAVARRO ALVAREZ, ESTELA DEL CARMEN",
+          "jersey": 15
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "BATTIKH ELJIBARI, DIKRA",
+          "jersey": 16
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "GONZALEZ TAPIA, RAUL",
+        "role_code": "A"
+      },
+      {
+        "name": "PI MARTINEZ, PAU",
+        "role_code": "E"
+      }
+    ]
+  },
+  "away": {
+    "name": "ARO, C.E. A",
+    "lineup": [
+      {
+        "player": {
+          "name": "AGUILERA PRIETO, IZASKUN",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "AICART FREIXAS, MARIA",
+          "jersey": 2
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "TANIA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PUIGGROS CAMA, CARLA",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ALVAREZ COTE, ZULMA ALEXANDRA",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "FERRER VIDEGAN, LAIA",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "NEDELCIU, DIANA ALEXANDRA",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "RIPOLLES LEGRAND, ANDREA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "RIOS RAMIREZ, KAREN YUNETH",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SANCHEZ SERRANO, SARA",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ROMERO GUERRERO, ANA CRISTINA",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PUIGDEMONT PAVLOVA, MARINA",
+          "jersey": 19
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "PÉREZ MARTOS, DAVID",
+        "role_code": "D"
+      },
+      {
+        "name": "MÁRQUEZ MOLINA, MARIO",
+        "role_code": "E"
+      }
+    ]
+  },
+  "stadium": {
+    "name": "CAMP DE FUTBOL MPAL. 1ER DE MAIG",
+    "address": "C/ DE PUJ XIC, 11, GRANOLLERS"
+  },
+  "referee": {
+    "name": "LEON ROCA, CHRISTIAN",
+    "committee": "Granollers"
+  },
+  "goals": [
+    {
+      "minute": 18,
+      "scoreline_home": 1,
+      "scoreline_away": 0,
+      "scorer_name": "KARIM ABDELBAKI, MARWA",
+      "scoring_team": "home",
+      "type": "regular"
+    },
+    {
+      "minute": 22,
+      "scoreline_home": 2,
+      "scoreline_away": 0,
+      "scorer_name": "TORRES DÍAZ, LAIA",
+      "scoring_team": "home",
+      "type": "regular"
+    },
+    {
+      "minute": 25,
+      "scoreline_home": 2,
+      "scoreline_away": 1,
+      "scorer_name": "PUIGGROS CAMA, CARLA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 37,
+      "scoreline_home": 2,
+      "scoreline_away": 2,
+      "scorer_name": "PUIGGROS CAMA, CARLA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 39,
+      "scoreline_home": 3,
+      "scoreline_away": 2,
+      "scorer_name": "MORATO ROMERO, YULIA",
+      "scoring_team": "home",
+      "type": "regular"
+    },
+    {
+      "minute": 48,
+      "scoreline_home": 3,
+      "scoreline_away": 3,
+      "scorer_name": "TANIA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 65,
+      "scoreline_home": 3,
+      "scoreline_away": 4,
+      "scorer_name": "PUIGGROS CAMA, CARLA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 72,
+      "scoreline_home": 4,
+      "scoreline_away": 4,
+      "scorer_name": "BATTIKH ELJIBARI, DIKRA",
+      "scoring_team": "home",
+      "type": "regular"
+    }
+  ],
+  "cards": [
+    {
+      "minute": 46,
+      "color": "yellow",
+      "target_kind": "player",
+      "target_name": "LAS HERAS AIXANDRI, SARA",
+      "team": "home"
+    },
+    {
+      "minute": 62,
+      "color": "yellow",
+      "target_kind": "player",
+      "target_name": "MORATO ROMERO, YULIA",
+      "team": "home"
+    },
+    {
+      "minute": 87,
+      "color": "yellow",
+      "target_kind": "coach",
+      "target_name": "GONZALEZ TAPIA, RAUL",
+      "team": "home"
+    },
+    {
+      "minute": 55,
+      "color": "yellow",
+      "target_kind": "coach",
+      "target_name": "PÉREZ MARTOS, DAVID",
+      "team": "away"
+    },
+    {
+      "minute": 89,
+      "color": "yellow",
+      "target_kind": "player",
+      "target_name": "TANIA",
+      "team": "away"
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "journey": 29,
+  "competition": "FCF",
+  "status": "ACTA TANCADA",
+  "score_home": 0,
+  "score_away": 6,
+  "home": {
+    "name": "UNIFICACIÓN C.F. SANTAPERPETUA A",
+    "lineup": [
+      {
+        "player": {
+          "name": "SÁNCHEZ ZACARÉN, AÍDA",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "NORIA CASTILLO, LAIA",
+          "jersey": 2
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "NUÑEZ JAIME, ANA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SOLÉ SÁNCHEZ, ALBA",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "FERNÁNDEZ DEL PINO, IRENE",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "CERRUITUDE SANDE, ARIANA",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PICÓN FREY, CHRISTINA",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LOPEZ REYES, MIREIA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "TRINIDAD CLAR, VERA",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SANCHEZ YANGUAS, MIREIA",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "GRANADOS PÉREZ, JENNIFER",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "CARO SILVA, NEREA",
+          "jersey": 12
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "RODRIGUEZ PADILLA, ZAIRA",
+          "jersey": 14
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "BARRERA RODRÍGUEZ, ALAN",
+        "role_code": "2"
+      }
+    ]
+  },
+  "away": {
+    "name": "CERDANYOLA VALLES, F.C. A",
+    "lineup": [
+      {
+        "player": {
+          "name": "ABAYA, FELICIA MARIA ANTONELLA",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SORIA MARTÍNEZ, MIREIA",
+          "jersey": 2
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "FONTANET RUBIÓ, YAIZA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "MILÀ CASTELLA, GINA",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "CALVO CORTIL, PAULA",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PARRA MOLINA, MARTA",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "AUSSANT ROURA, JULIA",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "MONJE SOLÀ, CRISTINA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "DEL TORO GUARDIA, ABRIL",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "GARCIA MOTA, MAR",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ESPADA RUBIO, FIONA",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LAURA MASSOTTI",
+          "jersey": 12
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "DOMENE CALVO PARRA, YAEL",
+          "jersey": 13
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "CAZENEUVE RUBIO, NUR",
+          "jersey": 14
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "GABRIEL CORTÉS, MARC",
+        "role_code": "E"
+      }
+    ]
+  },
+  "stadium": {
+    "name": "CAMP DE FUTBOL MPAL. CENTRE PACO NAVARRO (2)",
+    "address": "PG. DE LA FLORIDA, S/N, SANTA PERPÈTUA DE MOGODA"
+  },
+  "referee": {
+    "name": "RAHMOUM IBRAHIM, MORAD",
+    "committee": "Vallès Occidental"
+  },
+  "goals": [
+    {
+      "minute": 12,
+      "scoreline_home": 0,
+      "scoreline_away": 1,
+      "scorer_name": "ESPADA RUBIO, FIONA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 25,
+      "scoreline_home": 0,
+      "scoreline_away": 2,
+      "scorer_name": "LAURA MASSOTTI",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 60,
+      "scoreline_home": 0,
+      "scoreline_away": 3,
+      "scorer_name": "LAURA MASSOTTI",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 61,
+      "scoreline_home": 0,
+      "scoreline_away": 4,
+      "scorer_name": "CAZENEUVE RUBIO, NUR",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 81,
+      "scoreline_home": 0,
+      "scoreline_away": 5,
+      "scorer_name": "PARRA MOLINA, MARTA",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 87,
+      "scoreline_home": 0,
+      "scoreline_away": 6,
+      "scorer_name": "DEL TORO GUARDIA, ABRIL",
+      "scoring_team": "away",
+      "type": "regular"
+    }
+  ],
+  "cards": [
+    {
+      "minute": 69,
+      "color": "yellow",
+      "target_kind": "player",
+      "target_name": "CARO SILVA, NEREA",
+      "team": "home"
+    }
+  ]
+}

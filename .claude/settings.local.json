@@ -6,7 +6,11 @@
       "Bash(.venv/bin/python -c \"from src.common.paths import ROOT, DATA_DIR; from src.common.ids import normalize_name, match_id; print\\('ROOT:', ROOT\\); print\\('normalize_name test:', normalize_name\\('Puiggrós, Aina'\\)\\); print\\('match_id test:', match_id\\('Cirera', \\\\\"L'Estartit\\\\\", 29\\)\\)\")",
       "Bash(.venv/bin/python tutorial.py check)",
       "Bash(.venv/bin/python tutorial.py stage1)",
-      "Bash(.venv/bin/python -c ' *)"
+      "Bash(.venv/bin/python -c ' *)",
+      "Bash(.venv/bin/python tutorial.py stage2)",
+      "Bash(.venv/bin/python tutorial.py stage2 --inspect 2)",
+      "Bash(.venv/bin/python tutorial.py stage3)",
+      "Bash(.venv/bin/python tutorial.py stage4 ask \"¿Cuál fue el marcador entre Cirera y L'Estartit?\")"
     ]
   }
 }

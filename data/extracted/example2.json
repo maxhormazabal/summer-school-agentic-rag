@@ -1,0 +1,293 @@
+{
+  "journey": 29,
+  "competition": "FCF",
+  "status": "ACTA TANCADA",
+  "score_home": 1,
+  "score_away": 0,
+  "home": {
+    "name": "CIRERA, U.D. A",
+    "lineup": [
+      {
+        "player": {
+          "name": "JURADO RODRIGUEZ, YLENIA",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "OXLEY SHOVEIT, HANNAH MELANY",
+          "jersey": 2
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "GARCIA GUICH, AIDA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LLAMAS LOPEZ, LAIA",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LOPEZ JIMENEZ, PATRICIA",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "BERTOLI RICO, IRENE",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "BERTOLI RICO, DIANA",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SAEZ ROSSELL, MARTA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "CASTRO ALCALA, PAULA",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PÉREZ PARDO, BERTA",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "KAI",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "GONZALO SÁNCHEZ, LAIA",
+          "jersey": 12
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "RAYA CASTRO, MARIA FE",
+          "jersey": 13
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LORENZO RODRÍGUEZ, LUCIA",
+          "jersey": 14
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "UCHA FRANCO, DANIELA",
+          "jersey": 15
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "GONZALEZ PIQUE, ANNA",
+          "jersey": 16
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "GARCÍA ÁLVAREZ, DANIELA",
+          "jersey": 17
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LLORENTE GARRIDO, PAULA",
+          "jersey": 18
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "MALDONADO SABADO, CLAUDIA",
+          "jersey": 19
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": [
+      {
+        "name": "LOPEZ LLANOS, ANDREA",
+        "role_code": "X"
+      },
+      {
+        "name": "CAMPOS PARRILLA, AUGUSTO",
+        "role_code": "E"
+      }
+    ]
+  },
+  "away": {
+    "name": "L'ESTARTIT, U.E. A",
+    "lineup": [
+      {
+        "player": {
+          "name": "DE PAOLI GONZÁLEZ, MERITXELL",
+          "jersey": 1
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "BASO GIL, MIRIAM",
+          "jersey": 2
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "BERNADAS PORTAS, MARTA",
+          "jersey": 3
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "PUIG I FONT, MERCÈ",
+          "jersey": 4
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "CASTILLA RUIZ, ALICIA",
+          "jersey": 5
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "COMAS ANGELATS, JÚLIA",
+          "jersey": 6
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "SÁNCHEZ ANGELATS, REINE",
+          "jersey": 7
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ALSINA LOBO, CLAUDIA",
+          "jersey": 8
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "ESCRIBANO LINEROS, NOA",
+          "jersey": 9
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LAIA",
+          "jersey": 10
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "MASSO MUSTERA, NURIA",
+          "jersey": 11
+        },
+        "role": "starter"
+      },
+      {
+        "player": {
+          "name": "LOZADA SÁNCHEZ, DINORAH ROSALY",
+          "jersey": 12
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "ALSINA LOBO, LAIA",
+          "jersey": 13
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LOPEZ TORRAMADE, MARTA",
+          "jersey": 14
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LLOSA ALVAREZ, MARTA",
+          "jersey": 15
+        },
+        "role": "sub"
+      }
+    ],
+    "coaches": []
+  },
+  "stadium": {
+    "name": "CAMP DE FUTBOL MPAL. DE CIRERA",
+    "address": "CTRA. DE CIRERA, 174, MATARÓ"
+  },
+  "referee": {
+    "name": "GARCIA DIEZ, ISMAEL",
+    "committee": "Maresme"
+  },
+  "goals": [
+    {
+      "minute": 75,
+      "scoreline_home": 1,
+      "scoreline_away": 0,
+      "scorer_name": "MALDONADO SABADO, CLAUDIA",
+      "scoring_team": "home",
+      "type": "regular"
+    }
+  ],
+  "cards": [
+    {
+      "minute": 75,
+      "color": "yellow",
+      "target_kind": "player",
+      "target_name": "DE PAOLI GONZÁLEZ, MERITXELL",
+      "team": "away"
+    }
+  ]
+}

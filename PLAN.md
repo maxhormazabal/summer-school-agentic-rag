@@ -564,19 +564,19 @@ Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptació
   - [x] `python tutorial.py stage1` corre sin errores.
   - [x] Test de validación de un `MatchExtraction` sintético pasa.
 
-- [~] **Etapa 2 — Extracción VLM**
+- [x] **Etapa 2 — Extracción VLM**
   - [x] `src/extraction/pdf_to_images.py` convierte los 3 PDFs.
   - [x] `src/extraction/vlm_extractor.py::extract()` usa structured outputs.
-  - [ ] `data/extracted/example{1,2,3}.json` existen y validan. ← PENDIENTE: requiere OPENAI_API_KEY
-  - [ ] Para cada uno, `len(goals) == score_home + score_away`. ← PENDIENTE: requiere extracción
-  - [ ] Cada `scorer_name` matchea con su `lineup` correspondiente (con normalización). ← PENDIENTE
-  - [ ] `tutorial.py stage2 --inspect 1` muestra imagen + JSON. ← PENDIENTE
+  - [x] `data/extracted/example{1,2,3}.json` existen y validan.
+  - [x] Para cada uno, `len(goals) == score_home + score_away`.
+  - [x] Cada `scorer_name` matchea con su `lineup` correspondiente (con normalización).
+  - [x] `tutorial.py stage2 --inspect 1` muestra imagen + JSON.
 
-- [~] **Etapa 3 — Grafo Neo4J**
+- [x] **Etapa 3 — Grafo Neo4J**
   - [x] `src/graph/neo4j_client.py`, `constraints.py`, `ingest.py` implementados.
-  - [ ] `ingest_all()` inserta sin error. ← PENDIENTE: requiere credenciales Neo4J + JSONs extraídos
-  - [ ] Segunda ejecución no duplica nodos (counts iguales). ← PENDIENTE
-  - [ ] `render_graph()` produce `out/graph.html` autocontenido. ← PENDIENTE
+  - [x] `ingest_all()` inserta sin error.
+  - [x] Segunda ejecución no duplica nodos (counts iguales).
+  - [x] `render_graph()` produce `out/graph.html` autocontenido.
   - [x] `graph_schema_summary()` devuelve string usable por el agente.
 
 - [~] **Etapa 4 — Agente**
