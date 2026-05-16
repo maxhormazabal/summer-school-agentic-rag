@@ -23,15 +23,9 @@ def check() -> bool:
 
     # --- Neo4J ping ---
     try:
-        from neo4j import GraphDatabase
-        driver = GraphDatabase.driver(
-            get_secret("NEO4J_URI"),
-            auth=(get_secret("NEO4J_USER"), get_secret("NEO4J_PASSWORD")),
-            connection_timeout=15,
-        )
-        with driver.session() as session:
-            session.run("RETURN 1").single()
-        driver.close()
+        from src.graph.neo4j_client import Neo4jClient
+        with Neo4jClient() as client:
+            client.run_read("RETURN 1 AS x")
         results["Neo4J"] = ("✅", "OK")
     except Exception as exc:
         results["Neo4J"] = ("❌", str(exc)[:80])

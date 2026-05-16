@@ -551,12 +551,12 @@ Las etapas se ejecutan en orden. Cada una tiene **Meta**, **Tareas**, **Visualiz
 
 Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptación. No avanzar a la siguiente etapa con ítems sin marcar de la anterior.
 
-- [~] **Etapa 0 — Bootstrap**
+- [x] **Etapa 0 — Bootstrap**
   - [x] `requirements.txt`, `.env.example`, `tutorial.py` (scaffold) creados.
   - [x] `src/common/{paths,config,ids,logging}.py` implementados.
   - [x] `src/colab_setup.py` con instaladores no-op en local.
-  - [ ] `src/setup.py::check()` retorna True en local. ← PENDIENTE: requiere .env con credenciales
-  - [ ] `python tutorial.py check` muestra ambos ✅. ← PENDIENTE: requiere .env con credenciales
+  - [x] `src/setup.py::check()` retorna True en local.
+  - [x] `python tutorial.py check` muestra ambos ✅.
 
 - [x] **Etapa 1 — Ontología**
   - [x] `src/ontology/schema.py` con todos los modelos Pydantic.
