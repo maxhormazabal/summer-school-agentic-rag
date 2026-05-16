@@ -1,0 +1,15 @@
+graph LR
+    Match -->|HOME_TEAM| Team
+    Match -->|AWAY_TEAM| Team
+    Match -->|PLAYED_AT| Stadium
+    Match -->|OFFICIATED_BY| Referee
+    Match -->|HAS_GOAL| Goal
+    Match -->|HAS_CARD| Card
+    Goal -->|SCORED_BY| Player
+    Goal -->|FOR_TEAM| Team
+    Card -->|GIVEN_TO_PLAYER| Player
+    Card -->|GIVEN_TO_COACH| Coach
+    Card -->|AGAINST| Team
+    Player -->|APPEARED_IN| Match
+    Player -->|PLAYS_FOR| Team
+    Coach -->|COACHED| Team

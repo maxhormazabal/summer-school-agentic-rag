@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(uv venv *)",
+      "Bash(uv pip *)",
+      "Bash(.venv/bin/python -c \"from src.common.paths import ROOT, DATA_DIR; from src.common.ids import normalize_name, match_id; print\\('ROOT:', ROOT\\); print\\('normalize_name test:', normalize_name\\('Puiggrós, Aina'\\)\\); print\\('match_id test:', match_id\\('Cirera', \\\\\"L'Estartit\\\\\", 29\\)\\)\")",
+      "Bash(.venv/bin/python tutorial.py check)",
+      "Bash(.venv/bin/python tutorial.py stage1)"
+    ]
+  }
+}
