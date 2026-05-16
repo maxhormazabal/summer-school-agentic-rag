@@ -579,17 +579,17 @@ Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptació
   - [x] `render_graph()` produce `out/graph.html` autocontenido.
   - [x] `graph_schema_summary()` devuelve string usable por el agente.
 
-- [~] **Etapa 4 — Agente**
+- [x] **Etapa 4 — Agente**
   - [x] `src/agent/tools.py` con las 3 funciones + filtro read-only operativo.
   - [x] `src/agent/agent.py::ask()` completa el loop con tool-calling.
-  - [ ] Trazas guardadas en `out/agent_traces/`. ← PENDIENTE: requiere credenciales
-  - [ ] Pregunta 1 de demo responde correctamente. ← PENDIENTE
+  - [x] Trazas guardadas en `out/agent_traces/`.
+  - [x] Pregunta 1 de demo responde correctamente (1-0 Cirera).
 
-- [~] **Etapa 5 — Orquestador y demo**
+- [x] **Etapa 5 — Orquestador y demo**
   - [x] `tutorial.py demo` subcomando implementado con las 6 preguntas.
-  - [ ] `tutorial.py demo` ejecuta las 6 preguntas sin crashear. ← PENDIENTE: requiere credenciales
-  - [ ] Al menos una traza muestra reintento exitoso tras error. ← PENDIENTE
-  - [ ] `tutorial.py all` corre end-to-end desde cero. ← PENDIENTE
+  - [x] `tutorial.py demo` ejecuta las 6 preguntas sin crashear.
+  - [x] Al menos una traza muestra reintento exitoso tras error (Demo 1: L'Estartit quote fix).
+  - [ ] `tutorial.py all` corre end-to-end desde cero. ← pendiente verificación limpia
 
 ---
 
