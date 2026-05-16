@@ -589,7 +589,7 @@ Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptació
   - [x] `tutorial.py demo` subcomando implementado con las 6 preguntas.
   - [x] `tutorial.py demo` ejecuta las 6 preguntas sin crashear.
   - [x] Al menos una traza muestra reintento exitoso tras error (Demo 1: L'Estartit quote fix).
-  - [ ] `tutorial.py all` corre end-to-end desde cero. ← pendiente verificación limpia
+  - [x] `tutorial.py all` corre end-to-end desde cero.
 
 ---
 

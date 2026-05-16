@@ -80,63 +80,63 @@
       {
         "player": {
           "name": "KAI",
-          "jersey": 11
+          "jersey": 12
         },
         "role": "starter"
       },
       {
         "player": {
           "name": "GONZALO SÁNCHEZ, LAIA",
-          "jersey": 12
-        },
-        "role": "sub"
-      },
-      {
-        "player": {
-          "name": "RAYA CASTRO, MARIA FE",
           "jersey": 13
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "LORENZO RODRÍGUEZ, LUCIA",
+          "name": "RAYA CASTRO, MARIA FE",
           "jersey": 14
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "UCHA FRANCO, DANIELA",
+          "name": "LORENZO RODRIGUEZ, LUCIA",
           "jersey": 15
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "GONZALEZ PIQUE, ANNA",
+          "name": "UCHA FRANCO, DANIELA",
           "jersey": 16
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "GARCÍA ÁLVAREZ, DANIELA",
+          "name": "GONZALEZ PIQUE, ANNA",
           "jersey": 17
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "LLORENTE GARRIDO, PAULA",
+          "name": "GARCÍA ÁLVAREZ, DANIELA",
           "jersey": 18
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "MALDONADO SABADO, CLAUDIA",
+          "name": "LLORENTE GARRIDO, PAULA",
           "jersey": 19
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "MALDONADO SABADO, CLAUDIA",
+          "jersey": 21
         },
         "role": "sub"
       }
@@ -157,7 +157,7 @@
     "lineup": [
       {
         "player": {
-          "name": "DE PAOLI GONZÁLEZ, MERITXELL",
+          "name": "DE PAOLI GONZALEZ, MERITXELL",
           "jersey": 1
         },
         "role": "starter"
@@ -192,14 +192,14 @@
       },
       {
         "player": {
-          "name": "COMAS ANGELATS, JÚLIA",
+          "name": "COMAS ANGELATS, JULIA",
           "jersey": 6
         },
         "role": "starter"
       },
       {
         "player": {
-          "name": "SÁNCHEZ ANGELATS, REINE",
+          "name": "SANCHEZ ANGELATS, REINE",
           "jersey": 7
         },
         "role": "starter"
@@ -228,35 +228,35 @@
       {
         "player": {
           "name": "MASSO MUSTERA, NURIA",
-          "jersey": 11
+          "jersey": 12
         },
         "role": "starter"
       },
       {
         "player": {
-          "name": "LOZADA SÁNCHEZ, DINORAH ROSALY",
-          "jersey": 12
-        },
-        "role": "sub"
-      },
-      {
-        "player": {
-          "name": "ALSINA LOBO, LAIA",
+          "name": "LOZADA SANCHEZ, DINORAH ROSALY",
           "jersey": 13
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "LOPEZ TORRAMADE, MARTA",
+          "name": "ALSINA LOBO, LAIA",
           "jersey": 14
         },
         "role": "sub"
       },
       {
         "player": {
-          "name": "LLOSA ALVAREZ, MARTA",
+          "name": "LOPEZ TORRAMADE, MARTA",
           "jersey": 15
+        },
+        "role": "sub"
+      },
+      {
+        "player": {
+          "name": "LLOSA ALVAREZ, MARTA",
+          "jersey": 17
         },
         "role": "sub"
       }
@@ -286,7 +286,7 @@
       "minute": 75,
       "color": "yellow",
       "target_kind": "player",
-      "target_name": "DE PAOLI GONZÁLEZ, MERITXELL",
+      "target_name": "DE PAOLI GONZALEZ, MERITXELL",
       "team": "away"
     }
   ]
