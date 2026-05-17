@@ -88,7 +88,7 @@ def ask(question: str, max_iterations: int = 5) -> AgentResult:
                 "content": result_str,
             })
     else:
-        answer = answer or "[El agente alcanzó el límite de iteraciones sin respuesta final]"
+        answer = answer or "[Agent reached the iteration limit without a final answer]"
 
     # Persist trace
     TRACES_DIR.mkdir(parents=True, exist_ok=True)

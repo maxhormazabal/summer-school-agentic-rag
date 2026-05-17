@@ -45,24 +45,24 @@ def _prepare_schema(schema: dict) -> dict:
     return resolve(schema)  # type: ignore[return-value]
 
 _SYSTEM_PROMPT = """\
-Eres un asistente experto en extraer datos estructurados de actas oficiales de partidos de fútbol \
-de la Federació Catalana de Futbol (FCF). Las actas están escritas en catalán.
+You are an expert assistant specialised in extracting structured data from official football match \
+reports of the Federació Catalana de Futbol (FCF). The reports are written in Catalan.
 
-Estructura de un acta FCF:
-- Cabecera: jornada (Jornada N), competición, estado (ACTA TANCADA), equipos local y visitante, marcador final.
-- Por equipo: TITULARS (titulares), SUPLENTS (suplentes) con dorsal y nombre; EQUIP TÈCNIC con código de rol.
-- Centro: ÀRBITRES (árbitro y comité), GOLS (tabla de goles con marcador parcial creciente, autora y minuto), \
-ESTADI (estadio y dirección).
-- TARGETES: tarjetas con color (amarilla/roja), minuto y receptor.
+Structure of an FCF match report:
+- Header: matchday (Jornada N), competition, status (ACTA TANCADA), home and away teams, final score.
+- Per team: TITULARS (starters), SUPLENTS (substitutes) with jersey number and name; EQUIP TÈCNIC with role code.
+- Centre: ÀRBITRES (referee and committee), GOLS (goal table with running score, scorer and minute), \
+ESTADI (stadium and address).
+- TARGETES: cards with colour (yellow/red), minute and recipient.
 
-Reglas de interpretación:
-- El marcador parcial de la tabla GOLS es la fuente de verdad para el orden y el equipo que marcó.
-- Un gol en propia puerta (gol en contra) puede indicarse con un icono diferente; márcalo como type="own".
-- Las tarjetas pueden ser a jugadoras (target_kind="player") o a miembros del cuerpo técnico (target_kind="coach").
-- Algunos nombres son apodos de una sola palabra; no asumas formato "apellido, nombre".
-- Si un campo no es visible o no aplica, usa null.
+Interpretation rules:
+- The running score in the GOLS table is the source of truth for goal order and the scoring team.
+- An own goal may be indicated with a different icon; mark it as type="own".
+- Cards can be issued to players (target_kind="player") or to coaching staff (target_kind="coach").
+- Some names are single-word nicknames; do not assume "surname, first name" format.
+- If a field is not visible or does not apply, use null.
 
-Devuelve ÚNICAMENTE el JSON que valide contra el schema MatchExtraction, sin texto adicional.
+Return ONLY the JSON that validates against the MatchExtraction schema, with no additional text.
 """
 
 
@@ -93,7 +93,7 @@ def extract(image_path: Path) -> MatchExtraction:
                         "type": "image_url",
                         "image_url": {"url": _image_to_data_url(image_path), "detail": "high"},
                     },
-                    {"type": "text", "text": "Extrae todos los datos de esta acta en el formato JSON indicado."},
+                    {"type": "text", "text": "Extract all data from this match report in the specified JSON format."},
                 ],
             },
         ],

@@ -3,19 +3,19 @@ from __future__ import annotations
 from src.graph.neo4j_client import Neo4jClient
 
 _ONTOLOGY_PROSE = """\
-La base de datos contiene información sobre partidos de fútbol de la FCF (Federació Catalana de Futbol).
+The database contains information about FCF (Federació Catalana de Futbol) football matches.
 
-Nodos y propiedades principales:
-- Match: id (string único), journey (int), competition, status, score_home (int), score_away (int)
-- Team: id (nombre normalizado), name
-- Player: id (nombre normalizado), name
-- Coach: id (nombre normalizado), name, role_code
-- Stadium: id (nombre normalizado), name, address
-- Referee: id (nombre normalizado), name, committee
+Nodes and main properties:
+- Match: id (unique string), journey (int), competition, status, score_home (int), score_away (int)
+- Team: id (normalised name), name
+- Player: id (normalised name), name
+- Coach: id (normalised name), name, role_code
+- Stadium: id (normalised name), name, address
+- Referee: id (normalised name), name, committee
 - Goal: id, minute (int), scoreline_home (int), scoreline_away (int), scorer_name, scoring_team ("home"/"away"), type ("regular"/"own"/"penalty")
 - Card: id, minute (int), color ("yellow"/"red"), target_kind ("player"/"coach"), target_name, team ("home"/"away")
 
-Relaciones:
+Relationships:
 - (Match)-[:HOME_TEAM]->(Team)
 - (Match)-[:AWAY_TEAM]->(Team)
 - (Match)-[:PLAYED_AT]->(Stadium)
@@ -31,11 +31,11 @@ Relaciones:
 - (Player)-[:PLAYS_FOR {match_id}]->(Team)
 - (Coach)-[:COACHED {match_id}]->(Team)
 
-Convenciones de búsqueda:
-- Los IDs son nombres normalizados: sin acentos, en MAYÚSCULAS, espacios colapsados.
-- Para buscar por nombre de jugadora o equipo usa: WHERE p.id CONTAINS toUpper('nombre')
-- Ejemplo: MATCH (p:Player) WHERE p.id CONTAINS toUpper('garcia') RETURN p.name
-- Para filtros de texto parcial también puedes usar: WHERE toLower(p.name) CONTAINS toLower('garcia')
+Search conventions:
+- IDs are normalised names: no accents, UPPERCASE, collapsed whitespace.
+- To search by player or team name use: WHERE p.id CONTAINS toUpper('name')
+- Example: MATCH (p:Player) WHERE p.id CONTAINS toUpper('garcia') RETURN p.name
+- For partial text filters you can also use: WHERE toLower(p.name) CONTAINS toLower('garcia')
 """
 
 
@@ -45,7 +45,7 @@ def graph_schema_summary() -> str:
         with Neo4jClient() as client:
             labels = [r["label"] for r in client.run_read("CALL db.labels() YIELD label RETURN label ORDER BY label")]
             rel_types = [r["relationshipType"] for r in client.run_read("CALL db.relationshipTypes() YIELD relationshipType RETURN relationshipType ORDER BY relationshipType")]
-        live_info = f"\nLabels en el grafo: {', '.join(labels)}\nTipos de relación: {', '.join(rel_types)}\n"
+        live_info = f"\nGraph labels: {', '.join(labels)}\nRelationship types: {', '.join(rel_types)}\n"
     except Exception:
         live_info = ""
 

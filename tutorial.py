@@ -93,12 +93,12 @@ def cmd_repl(_args: argparse.Namespace) -> None:
 
 
 DEMO_QUESTIONS = [
-    "¿Cuál fue el marcador entre Cirera y L'Estartit?",
-    "¿Qué jugadora marcó más goles en la jornada 29?",
-    "¿En qué estadio jugó el equipo que encajó 6 goles?",
-    "Lista los goles marcados antes del minuto 30.",
-    "¿Cuántos penaltis se fallaron?",
-    "¿Algún entrenador o delegado recibió tarjeta?",
+    "What was the score between Cirera and L'Estartit?",
+    "Which player scored the most goals in matchday 29?",
+    "In which stadium did the team that conceded 6 goals play?",
+    "List the goals scored before minute 30.",
+    "How many penalties were missed?",
+    "Did any coach or team official receive a card?",
 ]
 
 

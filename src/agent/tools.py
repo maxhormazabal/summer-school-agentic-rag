@@ -44,9 +44,9 @@ TOOL_SPECS = [
         "function": {
             "name": "get_graph_schema",
             "description": (
-                "Devuelve el esquema completo del grafo Neo4J: labels, tipos de relación, "
-                "propiedades y ejemplos de Cypher. Llama a esta herramienta al inicio de cada "
-                "conversación para entender la estructura del grafo."
+                "Returns the full Neo4J graph schema: labels, relationship types, "
+                "properties and Cypher examples. Call this tool at the start of each "
+                "conversation to understand the graph structure."
             ),
             "parameters": {"type": "object", "properties": {}, "required": []},
         },
@@ -56,13 +56,13 @@ TOOL_SPECS = [
         "function": {
             "name": "validate_cypher",
             "description": (
-                "Valida la sintaxis de una query Cypher usando EXPLAIN (no ejecuta, no devuelve filas). "
-                "Úsala siempre antes de ejecutar una query nueva para detectar errores de sintaxis."
+                "Validates the syntax of a Cypher query using EXPLAIN (does not execute, returns no rows). "
+                "Always call this before running a new query to catch syntax errors."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "La query Cypher a validar"}
+                    "query": {"type": "string", "description": "The Cypher query to validate"}
                 },
                 "required": ["query"],
             },
@@ -73,14 +73,14 @@ TOOL_SPECS = [
         "function": {
             "name": "run_cypher",
             "description": (
-                "Ejecuta una query Cypher de lectura contra el grafo Neo4J y devuelve las filas. "
-                "Solo se permiten queries de lectura (MATCH, RETURN, WITH, WHERE, etc.). "
-                "Devuelve {rows: [...], error: null} o {rows: [], error: 'mensaje'}."
+                "Executes a read-only Cypher query against the Neo4J graph and returns the rows. "
+                "Only read queries are allowed (MATCH, RETURN, WITH, WHERE, etc.). "
+                "Returns {rows: [...], error: null} or {rows: [], error: 'message'}."
             ),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "query": {"type": "string", "description": "La query Cypher de lectura a ejecutar"}
+                    "query": {"type": "string", "description": "The read-only Cypher query to execute"}
                 },
                 "required": ["query"],
             },
