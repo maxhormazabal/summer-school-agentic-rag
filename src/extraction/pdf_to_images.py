@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from src.common.logging import console
-from src.common.paths import EXAMPLES_DIR, IMAGES_DIR
+from src.common.paths import DOCS_DIR, IMAGES_DIR
 
 
 def convert(pdf_path: Path, dpi: int = 220) -> Path:
@@ -28,4 +28,4 @@ def convert_all(force: bool = False) -> list[Path]:
         for p in IMAGES_DIR.glob("example*.png"):
             p.unlink()
 
-    return [convert(pdf) for pdf in sorted(EXAMPLES_DIR.glob("example*.pdf"))]
+    return [convert(pdf) for pdf in sorted(DOCS_DIR.glob("example*.pdf"))]

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from src.common.logging import console
-from src.common.paths import EXAMPLES_DIR, EXTRACTED_DIR, IMAGES_DIR
+from src.common.paths import DOCS_DIR, EXTRACTED_DIR, IMAGES_DIR
 from src.extraction.pdf_to_images import convert
 from src.extraction.vlm_extractor import extract
 from src.ontology.schema import MatchExtraction
@@ -15,7 +15,7 @@ def run(force: bool = False) -> list[Path]:
     EXTRACTED_DIR.mkdir(parents=True, exist_ok=True)
 
     results = []
-    for pdf_path in sorted(EXAMPLES_DIR.glob("example*.pdf")):
+    for pdf_path in sorted(DOCS_DIR.glob("example*.pdf")):
         json_path = EXTRACTED_DIR / (pdf_path.stem + ".json")
 
         if json_path.exists() and not force:
@@ -52,7 +52,7 @@ def inspect(n: int) -> tuple:
     json_path = EXTRACTED_DIR / f"example{n}.json"
 
     if not img_path.exists():
-        pdf_path = EXAMPLES_DIR / f"example{n}.pdf"
+        pdf_path = DOCS_DIR / f"example{n}.pdf"
         img_path = convert(pdf_path)
 
     img = PILImage.open(img_path)
