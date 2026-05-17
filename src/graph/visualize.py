@@ -19,13 +19,12 @@ _LABEL_COLORS = {
 def render_graph(limit: int = 300):
     """Render the Neo4J graph as a self-contained HTML file using pyvis."""
     from pyvis.network import Network
-    from IPython.display import IFrame
+    from IPython.display import HTML
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out_path = OUT_DIR / "graph.html"
 
     net = Network(
-        notebook=True,
         cdn_resources="in_line",
         height="600px",
         width="100%",
@@ -64,4 +63,4 @@ def render_graph(limit: int = 300):
 
     net.save_graph(str(out_path))
     console.print(f"[green]Graph saved → {out_path}[/green]")
-    return IFrame(str(out_path), width=900, height=600)
+    return HTML(out_path.read_text(encoding="utf-8"))
