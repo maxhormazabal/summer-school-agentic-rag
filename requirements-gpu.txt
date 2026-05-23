@@ -1,0 +1,11 @@
+# Heavy GPU dependencies, only needed when --provider local is used.
+# Install with:  uv pip install -r requirements-gpu.txt
+# Torch is installed separately via the CUDA index (see PLAN.md §10.3).
+transformers>=4.50
+accelerate>=0.34
+qwen-vl-utils>=0.0.10
+sentencepiece>=0.2.0
+einops>=0.8.0
+# torchvision is required by qwen_vl_utils — install from the same CUDA index as torch:
+#   uv pip install torchvision --index-url https://download.pytorch.org/whl/cu121
+torchvision

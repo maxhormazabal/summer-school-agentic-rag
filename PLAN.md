@@ -799,9 +799,10 @@ Marca cada ítem con `[x]` sólo cuando se cumpla.
 - [x] **§10.1 Paths**: `PDFS_FULL_DIR`, `IMAGES_FULL_DIR`, `EXTRACTED_FULL_DIR` añadidos a `src/common/paths.py`.
 - [x] **§10.2 Scripts**: `scripts/bulk_convert_pdfs.py` y `scripts/bulk_extract.py` creados, con `--help` funcional.
 - [x] **§10.3 Stub**: `src/extraction/vlm_local.py` creado con docstring de contrato y `NotImplementedError`.
-- [ ] **§10.3 Local backend implementado** (server-Claude): `src/extraction/vlm_local.py::extract()` funciona sobre una PNG y devuelve un `MatchExtraction` válido.
-- [ ] **§10.3 PNGs masivos**: `data/images_full/*.png` (1793 archivos) generados con `bulk_convert_pdfs.py`.
-- [ ] **§10.3 JSONs masivos**: `data/extracted_full/*.json` (≥1793 archivos, posibles fallos en `_failures.jsonl`) generados con `bulk_extract.py --provider local`.
+- [x] **§10.3 Local backend implementado** (server-Claude): `src/extraction/vlm_local.py::extract()` con `Qwen/Qwen3-VL-8B-Instruct` vía `transformers.AutoModelForImageTextToText`. Singleton lazy-load, self-correction loop sobre `ValidationError`. Outputs en `data/extracted_full/<model-tag>/` (model-namespaced).
+- [x] **§10.3 Multi-GPU orchestrator**: `scripts/bulk_extract_local.py` detecta GPUs libres por umbral de memoria (`nvidia-smi`), reparte el dataset en shards (1 worker por GPU vía `CUDA_VISIBLE_DEVICES` + `CUDA_DEVICE_ORDER=PCI_BUS_ID`), agrega fallos. `scripts/bulk_extract.py` ahora acepta `--shard I/N` y `--model-tag`. Lanzar siempre con `setsid nohup ... < /dev/null > log 2>&1 &` para que sobreviva al cierre de Claude/SSH (ver CLAUDE.md §Handoff).
+- [x] **§10.3 PNGs masivos**: `data/images_full/*.png` (1793 archivos) generados con `bulk_convert_pdfs.py`.
+- [ ] **§10.3 JSONs masivos**: `data/extracted_full/qwen3-vl-8b-instruct/*.json` (≥1793 archivos, posibles fallos en `_failures.jsonl`) generados con `bulk_extract_local.py`. EN CURSO — smoke test 8/8 OK, full run 1785 PNGs en flight (4 GPUs A40/L40S).
 - [ ] **§10.3 Zips entregados**: `images_full.zip` y `extracted_full.zip` listos para subir a GDrive.
 - [ ] **§11 GDrive IDs**: el usuario provee los dos IDs nuevos.
 - [ ] **§11.3 Notebook rewire**: descargas consolidadas al inicio, demo VLM reducida, ingesta apunta a `EXTRACTED_FULL_DIR`, preguntas del agente actualizadas.

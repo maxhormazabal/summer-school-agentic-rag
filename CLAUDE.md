@@ -22,11 +22,33 @@ Este repositorio implementa un tutorial end-to-end (versión escrita en Colab) q
 
 Si estás corriendo este repo en un servidor con GPU y debes producir los artefactos masivos para el dataset 1793:
 
-1. Implementa `src/extraction/vlm_local.py::extract()`. El contrato y sugerencias de modelos están en el docstring del archivo (Qwen2-VL, InternVL2, Pixtral, LLaVA-NeXT). Reutiliza `src.extraction.vlm_extractor._SYSTEM_PROMPT` verbatim — está afinado sobre los 3 ejemplos.
-2. Corre `python scripts/bulk_convert_pdfs.py` (no necesita GPU, solo poppler).
-3. Corre `python scripts/bulk_extract.py --provider local --workers 1`.
-4. Comprime `data/images_full/` y `data/extracted_full/` por separado y entrégaselos al usuario para subirlos a Google Drive (uno por carpeta).
-5. **NO toques el notebook ni `src/extraction/vlm_extractor.py`** — el notebook sigue usando OpenAI (en cantidad mínima: demo de 1-3 actas) y el rewire de descargas lo hace el Claude del laptop una vez tenga los IDs de GDrive.
+1. `src/extraction/vlm_local.py::extract()` ya está implementado con `Qwen/Qwen3-VL-8B-Instruct` vía HF Transformers. Reusa `_SYSTEM_PROMPT` de `vlm_extractor.py` verbatim. Singleton lazy-load por proceso; self-correction loop sobre `ValidationError`.
+2. Dependencias GPU en `requirements-gpu.txt`. Torch se instala aparte (`uv pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121`).
+3. Outputs son **model-namespaced**: `data/extracted_full/<model-tag>/<stem>.json`. Tag default = slug del HF model id (p.ej. `qwen3-vl-8b-instruct`).
+4. PNGs ya generados: `data/images_full/*.png` (1793).
+5. Para correr la extracción usa el orchestrator multi-GPU. **Lánzalo siempre detached** (sobrevive al cierre de la sesión de Claude / SSH):
+   ```bash
+   setsid nohup ./.venv/bin/python scripts/bulk_extract_local.py --gpus 1,2,4,5 \
+     < /dev/null > out/bulk_extract_full.log 2>&1 &
+   ```
+   - `setsid` → sesión nueva (SIGHUP de la sesión padre no propaga).
+   - `nohup` → ignora SIGHUP por si acaso.
+   - `< /dev/null` → sin stdin (evita SIGTTIN).
+   - `> out/bulk_extract_full.log 2>&1` → I/O capturada a archivo.
+   - `&` → background. Tras unos segundos, el orchestrator queda con `PPID=1` (init).
+
+   Verifica detachment con `ps -o pid,ppid,sid,tty -p <pid>`: PPID debe ser 1, SID propia, TTY `?`.
+
+   Por dentro: detecta GPUs libres por umbral de memoria, reparte shards 1 worker/GPU vía `CUDA_VISIBLE_DEVICES`. Idempotente y resumible (cada worker hace skip si el JSON existe). `CUDA_DEVICE_ORDER=PCI_BUS_ID` para alinear con `nvidia-smi`.
+
+   Para seguir el progreso desde otra sesión:
+   ```bash
+   tail -f out/bulk_extract_full.log                     # nivel orquestador
+   tail -f data/extracted_full/<model-tag>/_worker_logs/gpu-*.log   # por shard
+   ls data/extracted_full/<model-tag>/*.json | wc -l    # JSONs completos
+   ```
+6. Comprime `data/images_full/` y `data/extracted_full/<model-tag>/` por separado y entrégaselos al usuario para subirlos a Google Drive (uno por carpeta).
+7. **NO toques el notebook ni `src/extraction/vlm_extractor.py`** — el notebook sigue usando OpenAI (en cantidad mínima: demo de 1-3 actas) y el rewire de descargas lo hace el Claude del laptop una vez tenga los IDs de GDrive.
 
 ## Reglas siempre activas
 

@@ -1,0 +1,20 @@
+Multi-GPU bulk extract · model_tag=qwen3-vl-8b-instruct · gpus=[1, 2, 4, 5] (4 
+workers)
+  source: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/images_full 
+(total PNGs: 1793)
+  target: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
+/qwen3-vl-8b-instruct (pending: 1756)
+  launched GPU1 pid=965746 
+log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
+full/qwen3-vl-8b-instruct/_worker_logs/gpu-1.log
+  launched GPU2 pid=965747 
+log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
+full/qwen3-vl-8b-instruct/_worker_logs/gpu-2.log
+  launched GPU4 pid=965748 
+log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
+full/qwen3-vl-8b-instruct/_worker_logs/gpu-4.log
+  launched GPU5 pid=965749 
+log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
+full/qwen3-vl-8b-instruct/_worker_logs/gpu-5.log
