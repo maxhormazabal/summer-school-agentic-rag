@@ -12,7 +12,12 @@
       "Bash(.venv/bin/python tutorial.py stage3)",
       "Bash(.venv/bin/python tutorial.py stage4 ask \"¿Cuál fue el marcador entre Cirera y L'Estartit?\")",
       "Bash(.venv/bin/python tutorial.py demo)",
-      "Bash(.venv/bin/jupyter nbconvert *)"
+      "Bash(.venv/bin/jupyter nbconvert *)",
+      "Bash(jupyter nbconvert *)",
+      "Bash(python3 *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
