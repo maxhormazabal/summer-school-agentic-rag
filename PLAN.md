@@ -595,10 +595,217 @@ Marca cada ítem (con `[x]`) **solo** cuando se cumpla el criterio de aceptació
 
 ## 9. Notas finales para el coding agent
 
-- **Si te reconectas a mitad del proyecto**: lee este PLAN.md completo, mira `CLAUDE.md`, revisa la sección 8 (checklist) para saber dónde quedaste, e inspecciona `out/` y `data/extracted/` para confirmar artefactos existentes antes de re-ejecutar nada caro (extracción VLM).
+- **Si te reconectas a mitad del proyecto**: lee este PLAN.md completo, mira `CLAUDE.md`, revisa la sección 8 (checklist v1 — legacy) y §14 (checklist v2 — pivot al dataset completo) para saber dónde quedaste, e inspecciona `out/`, `data/extracted/` y `data/extracted_full/` para confirmar artefactos existentes antes de re-ejecutar nada caro.
 - **Antes de cada etapa**: confirma que las anteriores cumplen su criterio. Si no, completa lo pendiente primero.
 - **Si encuentras ambigüedad en la ontología o en el extractor**: prefiere ser conservador (no inventar tipos, no inferir penaltis si no hay icono claro) y deja una nota en el commit / log.
-- **Costes**: una corrida completa de extracción son ~3 llamadas VLM. Cachear es obligatorio. La demo del agente son ~6 conversaciones, cada una con 2-5 iteraciones; presupuesto manejable.
+- **Costes**: una corrida del extractor original son 3 llamadas VLM. La masiva del v2 son 1793; ver §10 para el procedimiento.
 - **No introduzcas dependencias extra** sin justificación. Si algo se puede resolver con la stdlib o las libs ya listadas, hazlo así.
-- **Commits**: si el repo está bajo git, commits pequeños por etapa con mensajes claros (`stage 0: bootstrap`, `stage 1: ontology + viz`, etc.). No hagas commits si no se te ha indicado explícitamente.
+- **Commits**: si el repo está bajo git, commits pequeños por etapa con mensajes claros. No hagas commits si no se te ha indicado explícitamente.
 - **No crees archivos `.md` adicionales** salvo este `PLAN.md` y `CLAUDE.md`. Cualquier documentación adicional va como docstrings en los módulos.
+
+---
+
+## 10. Pivot al dataset oficial completo (1793 actas) + swap a VLM local
+
+> **Contexto**: el equipo recibió el dataset oficial completo de la FCF, 1793 actas en `data/pages1793/`. El tutorial debe correr sobre datos reales a escala. La extracción se hará **en un servidor GPU con un VLM local** (no GPT-4o) para evitar el coste y la dependencia de OpenAI en la corrida masiva. El notebook que ven los estudiantes en Colab seguirá usando OpenAI sólo para la demo (1-3 actas) y para el agente.
+
+### 10.1 Artefactos y paths
+
+Adiciones a `src/common/paths.py`:
+
+```python
+PDFS_FULL_DIR     = DATA_DIR / "pages1793"      # input (commited as untracked dir o entregado aparte)
+IMAGES_FULL_DIR   = DATA_DIR / "images_full"    # PNG por PDF, generado por scripts/bulk_convert_pdfs.py
+EXTRACTED_FULL_DIR = DATA_DIR / "extracted_full" # JSON por PNG, generado por scripts/bulk_extract.py
+```
+
+Convención de nombres: el `stem` del PDF se conserva — `data/pages1793/527.pdf` → `data/images_full/527.png` → `data/extracted_full/527.json`.
+
+### 10.2 Scripts one-off (`scripts/`)
+
+Ambos están escritos para ser **idempotentes y resumibles**. Su contrato:
+
+**`scripts/bulk_convert_pdfs.py`** — sin dependencia de modelo:
+- Entrada: `data/pages1793/*.pdf`. Salida: `data/images_full/*.png`.
+- Flags: `--dpi 220` (default, igual que el extractor original), `--workers 4`, `--limit N` (smoke test).
+- Verifica que cada PDF sea de **1 página**. Si tiene más, se emite warning y se procesa sólo la primera (consistente con el dataset; muestra de 10/1793 confirmó 1 página).
+- No requiere GPU; corre en cualquier máquina con `poppler-utils` instalado.
+
+**`scripts/bulk_extract.py`** — corre el VLM:
+- Entrada: `data/images_full/*.png`. Salida: `data/extracted_full/<stem>.json`.
+- Flag `--provider {openai,local}` (o env `VLM_PROVIDER`):
+  - `openai` → delega a `src.extraction.vlm_extractor.extract` (GPT-4o, código existente, intocado).
+  - `local` → delega a `src.extraction.vlm_local.extract` (stub; server-Claude lo implementa).
+- Flags: `--workers 15` (default — bajar a 1 si es `local`), `--limit N`, `--retry-failures` (relee `_failures.jsonl` y re-procesa solo esos).
+- Log de fallos en `data/extracted_full/_failures.jsonl` (JSON-lines, una entrada por fallo con `file`, `error`, `traceback`).
+- Soft validations (no bloquean, sólo warning):
+  - `len(goals) == score_home + score_away`.
+  - Cada `scorer_name` aparece (vía `normalize_name`) en el lineup del equipo que marca.
+
+### 10.3 Procedimiento para el server-Claude (GPU box)
+
+1. **Implementa `src/extraction/vlm_local.py::extract(image_path: Path) -> MatchExtraction`**. El docstring del archivo enumera modelos candidatos (Qwen2-VL-7B-Instruct, InternVL2, Pixtral-12B vía vLLM, LLaVA-NeXT) y la estrategia recomendada de structured output (constrained decoding con Outlines o lm-format-enforcer, o post-hoc validation + self-correction).
+2. **Reutiliza el system prompt** existente: `from src.extraction.vlm_extractor import _SYSTEM_PROMPT`. Está afinado sobre los 3 ejemplos en catalán; no lo cambies salvo necesidad documentada.
+3. **Corre la conversión** (no necesita modelo): `python scripts/bulk_convert_pdfs.py`. Tiempo estimado: 10–30 min según CPU.
+4. **Corre la extracción**: `python scripts/bulk_extract.py --provider local --workers 1`. Tiempo estimado: depende del modelo y la VRAM. Si se interrumpe, re-ejecutar continúa desde donde quedó.
+5. **Procesa fallos** (si los hay): inspecciona `_failures.jsonl`. Si son ambigüedades genuinas del documento, déjalos así. Si son bugs del backend, fíxa el backend y `python scripts/bulk_extract.py --provider local --retry-failures`.
+6. **Comprime y entrega** dos zips separados:
+   - `images_full.zip` (carpeta `data/images_full/`).
+   - `extracted_full.zip` (carpeta `data/extracted_full/`, **excluyendo** `_failures.jsonl` antes de subir).
+7. **No toques** el notebook ni `vlm_extractor.py`. El rewire del notebook se hace después, con los IDs de GDrive que devuelva el usuario.
+
+### 10.4 Coste y tiempo (referencia, si se usara OpenAI)
+
+- ~5500 tokens input + ~800 tokens output por acta a 220 DPI con detail=high.
+- $0.022/acta × 1793 ≈ **$40 USD totales**.
+- 15 workers concurrentes ≈ **45 min** corridos.
+- Se documenta para tener referencia; **la corrida real es con VLM local**.
+
+---
+
+## 11. Refactor del notebook canónico
+
+> **Goal**: cuando el usuario tenga los GDrive IDs de `images_full.zip` y `extracted_full.zip`, modificar `summer_school_document_agentic_rag_tutorial.ipynb` para que (a) descargue ambos zips al **inicio** del notebook, (b) salte la extracción VLM masiva (ya está hecha), (c) reformule la narrativa para que los estudiantes entiendan que partimos de artefactos pre-computados pero podemos ver la extracción en vivo sobre 1-2 muestras.
+
+### 11.1 Estado pre-rewire
+
+Estructura actual del notebook (61 celdas):
+
+- 0–2: header + diagrama mermaid + intro.
+- 3–8: credentials + env setup + connectivity check.
+- 9–10: **Mid-notebook PDF download** (`gdown` el ID `10i1tmcyK02hulmpBgWUdUzULwqWz1mzC`, unzip a `data/documents/`). Esto es lo que hay que reemplazar.
+- 11–17: ontología (schema + viz).
+- 18–23: extracción VLM (`convert_all`, `run()` — corre sobre `data/documents/example*.pdf`).
+- 24–29: inspección de resultados + quality checks.
+- 30–39: ingesta al grafo + viz + idempotency.
+- 40–59: agente + demos.
+- 60: conclusión.
+
+### 11.2 Estructura post-rewire
+
+Cambios concretos:
+
+1. **Reemplazar cell 10** (mid-notebook PDF download) por una celda movida al inicio que descargue PNG zip y JSON zip. La narrativa nueva: "ya hemos pre-procesado las 1793 actas; ahora descargamos los artefactos y nos enfocamos en la parte interesante".
+2. **Insertar la celda agrupada de downloads inmediatamente después del connectivity check** (cell 8) — ANTES de la sección de ontología, para tener todo lo necesario disponible.
+3. **Modificar el código de las celdas 18–23 (Stage 2 - VLM)**: en vez de correr `run()` sobre los 3 ejemplos, hacer una demo en vivo sobre **1-2 PNGs del dataset masivo** usando `extract()` (OpenAI, barato, ilustrativo). El resto se muestra como "ya está extraído, aquí están los 1793 JSONs".
+4. **Modificar las celdas 30–37 (Stage 3 - graph)**: ingestar desde `EXTRACTED_FULL_DIR` en lugar de `EXTRACTED_DIR`. Ajustar `src/graph/ingest.py::ingest_all()` para aceptar un parámetro de directorio (o agregar `ingest_full()` que itera sobre `EXTRACTED_FULL_DIR`).
+5. **Ajustar las preguntas del agente (40–59)**: las 6 preguntas actuales son específicas a los 3 ejemplos ("Cirera vs L'Estartit"). Con 1793 actas, hay que (a) reformular preguntas que aprovechen la escala — "¿qué equipo ganó más partidos en la jornada N?", "¿cuántos goles marcó X jugadora en toda la temporada?", o (b) mantener algunas específicas a equipos conocidos del dataset y agregar agregaciones nuevas. Esta lista de preguntas se diseña con el usuario antes de implementar.
+
+### 11.3 Implementación práctica
+
+Pseudo-código de la celda de descargas consolidada:
+
+```python
+# === Consolidated downloads (one-time, idempotent) ===
+PNG_ZIP_GDRIVE_ID  = "<placeholder>"  # filled in once usuario sube
+JSON_ZIP_GDRIVE_ID = "<placeholder>"
+
+from src.common.paths import IMAGES_FULL_DIR, EXTRACTED_FULL_DIR
+import subprocess, os, zipfile
+from pathlib import Path
+
+def _download_and_unzip(gdrive_id: str, target_dir: Path, label: str):
+    target_dir.mkdir(parents=True, exist_ok=True)
+    # Skip if there's already enough content
+    if any(target_dir.iterdir()):
+        print(f"  {label}: already populated, skipping download.")
+        return
+    zip_path = f"{label}.zip"
+    subprocess.run(["gdown", f"https://drive.google.com/uc?id={gdrive_id}", "-O", zip_path], check=True)
+    with zipfile.ZipFile(zip_path) as zf:
+        zf.extractall(target_dir)
+    os.remove(zip_path)
+    print(f"  {label}: downloaded and unpacked.")
+
+_download_and_unzip(PNG_ZIP_GDRIVE_ID,  IMAGES_FULL_DIR,    "images_full")
+_download_and_unzip(JSON_ZIP_GDRIVE_ID, EXTRACTED_FULL_DIR, "extracted_full")
+```
+
+### 11.4 Criterio de aceptación
+
+- El notebook abre en Colab, ejecuta sin error de top a bottom.
+- Sólo se hacen 2 llamadas a OpenAI (la demo de extracción) + las del agente.
+- El grafo ingesta los ~1793 partidos en menos de 5 min (estimar tras la primera corrida — ajustar batch size de Cypher si hace falta).
+- Las preguntas demo del agente devuelven respuestas no-triviales (no "no encontré información").
+
+---
+
+## 12. Split del tutorial en Part 1 (laboratorio) + Part 2 (operacional)
+
+> **Motivación del equipo**: el tutorial actual es robusto pero los estudiantes pierden la sensación de "estamos construyendo esto". Se quiere una primera parte donde toquen cosas en ambiente controlado, vean el sistema por dentro, modifiquen pequeñas piezas, y entiendan cada componente. La segunda parte muestra el sistema operando a escala con el dataset oficial.
+
+### 12.1 Decisiones
+
+- **Dataset Part 1**: los 3 `example*.pdf` ya en `data/documents/` (PNGs en `data/images/`, JSONs en `data/extracted/`). Ya están ingestados, validados, son **suficientes** para mostrar todo el flujo y los estudiantes pueden "romperlos" sin riesgo.
+- **Dataset Part 2**: las 1793 actas desde GDrive como precomputed PNG+JSON (ver §10 y §11).
+- **Archivos**:
+  - Part 1 → `summer_school_part1_lab.ipynb` (nuevo).
+  - Part 2 → `summer_school_document_agentic_rag_tutorial.ipynb` (existente, post-rewire §11).
+- **Continuidad narrativa**: Part 1 cierra con "ahora que entiendes los componentes, veamos cómo escala", linkeando a Part 2.
+
+### 12.2 Estructura propuesta de Part 1 (lab)
+
+| Sección | Contenido | TODO del estudiante |
+|---|---|---|
+| **0. Setup** | Credenciales + env. Idéntico a Part 2. | (ninguno — sólo pegar credenciales) |
+| **1. El dominio** | Vista preview de 1 PDF de muestra (`example1.pdf`). Lectura del PDF y explicación de qué información extraer. | (lectura guiada) |
+| **2. Ontología — workshop** | Mostrar `MatchExtraction` con todos sus campos. Diagrama graphviz. | **TODO**: agregar un campo opcional `position: str \| None` al `Player` y regenerar el diagrama. Validación: el `MatchExtraction` sintético del notebook sigue validando. |
+| **3. VLM en vivo** | Corre `extract()` sobre 1 PDF (visible). Muestra el system prompt. Compara JSON con el PDF lado a lado. | **TODO**: modificar UNA línea del system prompt (sugerencia: añadir "be conservative with own goals — only mark type='own' if explicitly shown") y re-extraer. Comparar JSON antes/después. |
+| **4. Grafo — workshop** | Mostrar `ingest_match` paso a paso (constraints, MERGE, relationships). | **TODO**: escribir una query Cypher (con plantilla guía) que cuente goles por equipo, ejecutarla con `run_cypher`. Validación: el resultado coincide con el agregado calculado en Python desde los JSONs. |
+| **5. Agente — workshop** | Mostrar `ask()` con la pregunta 1 de la batería original ("Cirera vs L'Estartit"). Mostrar la traza completa. | **TODO**: modificar UNA línea del system prompt del agente (sugerencia: tono más formal o más casual), preguntar de nuevo, observar el cambio. |
+| **6. Conclusión & transición** | Recap. "En Part 2 verás esto mismo correr sobre 1793 actas." | — |
+
+### 12.3 Guardrails pedagógicos
+
+Cada celda de TODO debe ir seguida de una celda de validación que diga:
+
+- ✅ "Tu cambio preserva el invariante X" (con explicación de por qué).
+- ❌ "Tu cambio rompió el invariante Y — aquí está la diferencia (diff)".
+
+Esto reduce frustración cuando los estudiantes experimentan.
+
+### 12.4 Implementación
+
+Cuando llegue el momento (después de §11):
+
+1. **Copia el notebook canónico** post-rewire a `summer_school_part1_lab.ipynb`.
+2. **Elimina** las secciones de download masivo, Stage 2 demo a escala, las 6 preguntas avanzadas. Mantén la batería original de 6 preguntas adaptada para los 3 ejemplos.
+3. **Inserta las celdas de TODO** con bloque markdown destacado ("📝 Tu turno") y la celda de validación inmediatamente después.
+4. **Marca claramente** las áreas que NO se deben modificar (el resto del notebook) — con un disclaimer al inicio.
+5. **Revisa el orden**: ontología → extracción → grafo → agente, con cada sección autónoma (un estudiante puede saltar la extracción si no quiere gastar tokens).
+6. **Confirma con el usuario** los TODOs específicos antes de escribirlos definitivamente.
+
+### 12.5 Criterio de aceptación
+
+- `summer_school_part1_lab.ipynb` corre completo en Colab sin error.
+- Cada TODO tiene una solución que pasa la validación inmediata.
+- El notebook no tarda más de **15 min** end-to-end (Part 2 puede tardar 30+ min con la ingesta masiva).
+- Los TODOs son **reversibles** (`reset_to_default()` o re-clone del repo basta).
+
+---
+
+## 13. Estado de los notebooks
+
+- `tutorial.ipynb` (62 celdas) — versión antigua, **no es el canónico**. Probablemente se puede borrar tras el split. Confirmar con el usuario antes.
+- `summer_school_document_agentic_rag_tutorial.ipynb` (61 celdas) — **canónico actual**, va a convertirse en Part 2 tras §11.
+- `summer_school_part1_lab.ipynb` — **pendiente de crear** (§12).
+
+---
+
+## 14. Checklist v2 — Pivot al dataset completo + split
+
+Marca cada ítem con `[x]` sólo cuando se cumpla.
+
+- [x] **§10.1 Paths**: `PDFS_FULL_DIR`, `IMAGES_FULL_DIR`, `EXTRACTED_FULL_DIR` añadidos a `src/common/paths.py`.
+- [x] **§10.2 Scripts**: `scripts/bulk_convert_pdfs.py` y `scripts/bulk_extract.py` creados, con `--help` funcional.
+- [x] **§10.3 Stub**: `src/extraction/vlm_local.py` creado con docstring de contrato y `NotImplementedError`.
+- [ ] **§10.3 Local backend implementado** (server-Claude): `src/extraction/vlm_local.py::extract()` funciona sobre una PNG y devuelve un `MatchExtraction` válido.
+- [ ] **§10.3 PNGs masivos**: `data/images_full/*.png` (1793 archivos) generados con `bulk_convert_pdfs.py`.
+- [ ] **§10.3 JSONs masivos**: `data/extracted_full/*.json` (≥1793 archivos, posibles fallos en `_failures.jsonl`) generados con `bulk_extract.py --provider local`.
+- [ ] **§10.3 Zips entregados**: `images_full.zip` y `extracted_full.zip` listos para subir a GDrive.
+- [ ] **§11 GDrive IDs**: el usuario provee los dos IDs nuevos.
+- [ ] **§11.3 Notebook rewire**: descargas consolidadas al inicio, demo VLM reducida, ingesta apunta a `EXTRACTED_FULL_DIR`, preguntas del agente actualizadas.
+- [ ] **§11.4 Aceptación rewire**: notebook corre end-to-end en Colab sin error, ≤5 llamadas OpenAI fuera del agente.
+- [ ] **§12 TODOs Part 1 confirmados** con el usuario (los 4 propuestos en §12.2 o variantes).
+- [ ] **§12.4 Part 1 creado**: `summer_school_part1_lab.ipynb` con TODOs + validaciones.
+- [ ] **§12.5 Aceptación split**: Part 1 corre sin error en Colab en ≤15 min, cada TODO tiene solución que valida.
