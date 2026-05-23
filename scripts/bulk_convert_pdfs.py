@@ -38,9 +38,9 @@ def _convert_one(pdf_path: Path, dpi: int, out_dir: Path) -> tuple[Path, str]:
 
     try:
         pages = convert_from_path(str(pdf_path), dpi=dpi)
-        if len(pages) != 1:
-            return out_path, f"warn:multi-page({len(pages)})"
         pages[0].save(str(out_path), "PNG")
+        if len(pages) != 1:
+            return out_path, f"warn:multi-page({len(pages)}, saved page 1)"
         return out_path, "ok"
     except Exception as exc:  # noqa: BLE001
         return out_path, f"error:{type(exc).__name__}:{exc}"
