@@ -28,20 +28,22 @@ _TOOL_FN_MAP = {
 
 def ask(question: str, max_iterations: int = 5) -> AgentResult:
     """Ask a natural language question; the agent translates it to Cypher and responds."""
-    from openai import OpenAI
     from rich.panel import Panel
     from rich.syntax import Syntax
 
-    client = OpenAI(api_key=get_secret("OPENAI_API_KEY"))
+    from src.common.llm import backend_for, get_client_and_model
+
+    client, model = get_client_and_model("agent")
+    agent_backend = backend_for("agent")
     messages = build_messages(question)
     cypher_attempts: list[dict] = []
     answer = ""
 
-    console.print(Panel(f"[bold]{question}[/bold]", title="Question"))
+    console.print(Panel(f"[bold]{question}[/bold]", title=f"Question ({model})"))
 
     for iteration in range(1, max_iterations + 1):
         response = client.chat.completions.create(
-            model="gpt-4o",
+            model=model,
             messages=messages,
             tools=TOOL_SPECS,
             tool_choice="auto",
@@ -50,6 +52,17 @@ def ask(question: str, max_iterations: int = 5) -> AgentResult:
         msg = response.choices[0].message
 
         if not msg.tool_calls:
+            # Some OpenAI-compatible servers (e.g. vLLM without --enable-auto-tool-choice
+            # --tool-call-parser) emit tool calls as raw text like
+            # `[TOOL_CALLS][{"name":...}]` instead of structured tool_calls. Detect that so
+            # the agent fails loudly instead of returning the raw marker as an "answer".
+            if agent_backend == "local" and "[TOOL_CALLS]" in (msg.content or ""):
+                raise RuntimeError(
+                    "Agent backend 'local' returned tool calls as text, not structured "
+                    "tool_calls. The vLLM server must be started with "
+                    "`--enable-auto-tool-choice --tool-call-parser mistral` (for Pixtral). "
+                    f"Raw content: {(msg.content or '')[:200]!r}"
+                )
             answer = msg.content or ""
             messages.append({"role": "assistant", "content": answer})
             break

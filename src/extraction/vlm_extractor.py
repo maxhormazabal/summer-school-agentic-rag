@@ -75,15 +75,16 @@ def _image_to_data_url(image_path: Path) -> str:
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
 def extract(image_path: Path) -> MatchExtraction:
     """Extract structured match data from a PNG image using GPT-4o vision."""
-    from openai import OpenAI
     from pydantic import ValidationError
 
-    client = OpenAI(api_key=get_secret("OPENAI_API_KEY"))
+    from src.common.llm import get_client_and_model
+
+    client, model = get_client_and_model("extraction")
     schema = _prepare_schema(MatchExtraction.model_json_schema())
 
-    console.print(f"[cyan]VLM extracting {image_path.name}...[/cyan]")
+    console.print(f"[cyan]VLM extracting {image_path.name} ({model})...[/cyan]")
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model=model,
         messages=[
             {"role": "system", "content": _SYSTEM_PROMPT},
             {

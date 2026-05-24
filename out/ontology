@@ -1,0 +1,28 @@
+// FCF Match Ontology
+digraph ontology {
+	bgcolor=white fontsize=11 rankdir=LR
+	node [fontname=Helvetica fontsize=10 shape=box style="filled,rounded"]
+	edge [fontname=Helvetica fontsize=9]
+	Match [label=Match fillcolor="#4A90D9" fontcolor=white]
+	Team [label=Team fillcolor="#E67E22" fontcolor=white]
+	Player [label=Player fillcolor="#27AE60" fontcolor=white]
+	Coach [label=Coach fillcolor="#8E44AD" fontcolor=white]
+	Stadium [label=Stadium fillcolor="#C0392B" fontcolor=white]
+	Referee [label=Referee fillcolor="#16A085" fontcolor=white]
+	Goal [label=Goal fillcolor="#F39C12" fontcolor=white]
+	Card [label=Card fillcolor="#E74C3C" fontcolor=white]
+	Match -> Team [label=HOME_TEAM]
+	Match -> Team [label=AWAY_TEAM]
+	Match -> Stadium [label=PLAYED_AT]
+	Match -> Referee [label=OFFICIATED_BY]
+	Match -> Goal [label=HAS_GOAL]
+	Match -> Card [label=HAS_CARD]
+	Goal -> Player [label=SCORED_BY]
+	Goal -> Team [label=FOR_TEAM]
+	Card -> Player [label=GIVEN_TO_PLAYER]
+	Card -> Coach [label=GIVEN_TO_COACH]
+	Card -> Team [label=AGAINST]
+	Player -> Match [label=APPEARED_IN]
+	Player -> Team [label=PLAYS_FOR]
+	Coach -> Team [label=COACHED]
+}
