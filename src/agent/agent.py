@@ -52,16 +52,19 @@ def ask(question: str, max_iterations: int = 5) -> AgentResult:
         msg = response.choices[0].message
 
         if not msg.tool_calls:
-            # Some OpenAI-compatible servers (e.g. vLLM without --enable-auto-tool-choice
-            # --tool-call-parser) emit tool calls as raw text like
-            # `[TOOL_CALLS][{"name":...}]` instead of structured tool_calls. Detect that so
-            # the agent fails loudly instead of returning the raw marker as an "answer".
-            if agent_backend == "local" and "[TOOL_CALLS]" in (msg.content or ""):
+            # Some OpenAI-compatible servers emit tool calls as raw text instead of
+            # structured tool_calls: Mistral/Pixtral as `[TOOL_CALLS][{...}]` (vLLM without
+            # `--tool-call-parser`), Qwen/Hermes as `<tool_call>{...}</tool_call>`
+            # (llama-server without `--jinja`). Detect both so the agent fails loudly
+            # instead of returning the raw marker as an "answer".
+            raw = msg.content or ""
+            if agent_backend == "local" and ("[TOOL_CALLS]" in raw or "<tool_call>" in raw):
                 raise RuntimeError(
                     "Agent backend 'local' returned tool calls as text, not structured "
-                    "tool_calls. The vLLM server must be started with "
-                    "`--enable-auto-tool-choice --tool-call-parser mistral` (for Pixtral). "
-                    f"Raw content: {(msg.content or '')[:200]!r}"
+                    "tool_calls. Start the server with tool-call parsing enabled: "
+                    "llama-server `--jinja` (Qwen3.5), or vLLM "
+                    "`--enable-auto-tool-choice --tool-call-parser <hermes|mistral>`. "
+                    f"Raw content: {raw[:200]!r}"
                 )
             answer = msg.content or ""
             messages.append({"role": "assistant", "content": answer})
@@ -72,7 +75,10 @@ def ask(question: str, max_iterations: int = 5) -> AgentResult:
 
         for tc in msg.tool_calls:
             fn_name = tc.function.name
-            fn_args = json.loads(tc.function.arguments)
+            # OpenAI returns arguments as a JSON string; some llama.cpp builds return an
+            # already-parsed dict (ggml-org/llama.cpp#20198). Accept both.
+            _raw_args = tc.function.arguments
+            fn_args = _raw_args if isinstance(_raw_args, dict) else json.loads(_raw_args or "{}")
 
             result = _TOOL_FN_MAP[fn_name](fn_args)
 

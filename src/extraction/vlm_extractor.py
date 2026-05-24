@@ -63,6 +63,11 @@ Interpretation rules:
 - If a field is not visible or does not apply, use null.
 
 Return ONLY the JSON that validates against the MatchExtraction schema, with no additional text.
+
+CRITICAL: Each team has TWO player lists — TITULARS (starters) AND a separate SUPLENTS \
+(substitutes) block, usually below or beside the starters. You MUST extract EVERY row of the \
+SUPLENTS list as a lineup entry with role="sub". Do not stop after the starters. A team \
+typically has several substitutes; returning zero substitutes is almost always an extraction error.
 """
 
 

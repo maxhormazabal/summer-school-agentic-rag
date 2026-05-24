@@ -814,3 +814,34 @@ Marca cada ítem con `[x]` sólo cuando se cumpla.
 - [x] **§12 TODOs Part 1**: requisito del usuario = modelos elegibles/agnósticos al inicio (extracción + agente, cualquier combo). 4 ejercicios fill-in-the-blank diseñados (ontología `Goal`, `quality_check`, query Cypher goles/equipo, agente: pregunta NL + tono), cada uno con celda de validación ✅/❌.
 - [x] **§12.4 Part 1 creado — DENTRO del notebook canónico** (NO archivo aparte; el usuario lo aclaró): `summer_school_document_agentic_rag_tutorial.ipynb` ahora tiene 55 celdas en un solo flujo top-to-bottom: **setup compartido** (credenciales + selección de backend agnóstico + connectivity backend-aware) → **`# Part 1 — Interactive Lab`** (3 ejemplos de `data/`, sin descarga; 4 ejercicios fill-in-the-blank con check ✅/❌: ontología `Goal`, `quality_check`, query Cypher goles/equipo, agente pregunta+tono; usa `ingest_all` sobre los 3) → **`# Part 2 — At Scale`** (descarga zips 1793 de GDrive, `ingest_full`, graph viz, 2 preguntas del agente + traza, conclusión). Reset del system-prompt al entrar a Part 2 (evita que el experimento de tono de P1 ej.B contamine P2). Construido vía scripts one-off `scripts/_build_part1.py` (genera el lab) + `scripts/_merge_parts.py` (fusiona lab+escala en el canónico). Lógica de ejercicios+checks validada localmente (esqueletos→❌ sin crash, soluciones→✅). **Sin validar en Colab**: `render_ontology` (necesita `dot`), `ingest_*`/`run_cypher`/`ask` (Neo4j/OpenAI) — espejan celdas/funciones ya probadas. El archivo standalone `summer_school_part1_lab.ipynb` fue borrado (`git status: D`).
 - [ ] **§12.5 Aceptación split**: Part 1 corre sin error en Colab en ≤15 min, cada TODO tiene solución que valida. **(pendiente: validación end-to-end en Colab por el usuario)**
+
+---
+
+## 15. Pivot a modelos Qwen3.5 in-Colab (2026-05-24)
+
+> **Requisito del usuario**: dejar de usar OpenAI **y** el server vLLM remoto. Cargar dos modelos GGUF directamente en el Colab. Descargas todas al inicio. Tras la extracción, **descargar el modelo de visión antes** de cargar el agéntico (GPU de Colab pequeña). Crear un segundo notebook con las soluciones de Part 1.
+
+### 15.1 Decisiones (verificadas vía web/HF)
+
+- **Familia única Qwen3.5** (lanzada 2026-03-02, multimodal en todos los tamaños 0.8/2/4/9B — el usuario lo intuyó correctamente; `*-GGUF` traen `mmproj-F16.gguf`):
+  - Extracción (visión): `unsloth/Qwen3.5-4B-GGUF:UD-Q4_K_XL` + `mmproj-F16.gguf`.
+  - Agente (tool-calls): `unsloth/Qwen3.5-2B-GGUF:UD-Q4_K_XL` (modo text-only, `--jinja`).
+- **Runtime = `llama-server` (llama.cpp built-from-source con CUDA)** como subproceso, endpoint OpenAI-compatible `/v1`. **Reusa el backend `local` de `src/common/llm.py` sin cambios** — sólo apunta `LOCAL_VLLM_BASE_URL` a `http://127.0.0.1:8000/v1`. Visión vía `--mmproj`, tool-calling vía `--jinja` (parser Hermes nativo de Qwen). Doc autoritativa: unsloth llama-server deploy guide + HF model cards.
+- **Swap de modelos**: `start_llama_server()` mata el server previo antes de arrancar el nuevo → libera VRAM. Visión sólo vive durante la extracción de Part 1; luego se descarga y se carga el 2B para el resto (Part 1 agente + todo Part 2). Celdas `nvidia-smi` muestran la VRAM bajar/subir.
+
+### 15.2 Cambios de código
+
+- `src/agent/agent.py`: (a) guard de tool-calls-como-texto ampliado a `<tool_call>` (Qwen/Hermes) además de `[TOOL_CALLS]` (Mistral); (b) `tc.function.arguments` acepta dict o str (llama.cpp #20198).
+- `src/extraction/vlm_extractor.py::_SYSTEM_PROMPT`: añadido el énfasis SUPLENTS verbatim de `vlm_local.py` (Qwen tiende a omitir suplentes). Inofensivo para cualquier backend; ahora visible en la celda que muestra el prompt. (`vlm_local.py` sigue appendeando `_SUPLENTS_EMPHASIS` → ahora redundante pero benigno; bulk ya hecho, no se re-corre.)
+- `src/common/llm.py`: **intacto** (el backend `local` ya hacía exactamente lo necesario).
+
+### 15.3 Notebooks (vía `scripts/_build_qwen_notebooks.py`, one-off)
+
+- `summer_school_document_agentic_rag_tutorial.ipynb` (65 celdas): header → **Setup** (credenciales SOLO Neo4j; elección de modelos Qwen3.5; bootstrap+apt build-deps; **build llama.cpp + descarga 2 GGUF + descarga GDrive 1793 — todo al inicio**; helpers `start/stop_llama_server`; connectivity Neo4j-only) → **Part 1** (preview, ontología+ej, **carga visión 4B → extracción live de los 3 ejemplos → quality_check ej → descarga visión + nvidia-smi → carga agente 2B**, grafo+ej Cypher, agente+ej pregunta/tono) → **Part 2** (reset prompt, `ingest_full` 1793, viz, 2 preguntas + traza, conclusión).
+- `summer_school_part1_solutions.ipynb` (51 celdas): header + banner + Setup + Part 1 con los 4 ejercicios resueltos. Sin Part 2 (no es interactivo).
+- OpenAI eliminado de credenciales; ya no se pide API key. `tutorial.py` y el backend `openai` siguen intactos (backward-compatible para uso local).
+
+### 15.4 Validado / pendiente
+
+- **Validado localmente**: ambos notebooks parsean, todas las celdas compilan; soluciones de los 4 ejercicios pasan contra `data/extracted/example*.json` reales; esqueletos fallan con ❌ sin crashear.
+- [ ] **Pendiente (Colab, GPU)**: build llama.cpp CUDA; extracción visión vía `response_format` json_schema→grammar; tool-calling del agente 2B vía `--jinja` (riesgo: parser Qwen3.5 muy nuevo → si vuelve como texto, el guard de `agent.py` lo detecta); swap de VRAM; tiempo total de setup (~10 min, contra el target ≤15 min de §12.5).
