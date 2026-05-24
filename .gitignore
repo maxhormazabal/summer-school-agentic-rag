@@ -2,3 +2,5 @@
 .venv/
 .env
 data/
+out/images_full.zip
+out/extracted_full.zip

@@ -5,16 +5,31 @@ workers)
 (total PNGs: 1793)
   target: 
 /home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
-/qwen3-vl-8b-instruct (pending: 1756)
-  launched GPU1 pid=965746 
+/qwen3-vl-8b-instruct (pending: 1793)
+  launched GPU1 pid=1001973 
 log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
 full/qwen3-vl-8b-instruct/_worker_logs/gpu-1.log
-  launched GPU2 pid=965747 
+  launched GPU2 pid=1001974 
 log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
 full/qwen3-vl-8b-instruct/_worker_logs/gpu-2.log
-  launched GPU4 pid=965748 
+  launched GPU4 pid=1001975 
 log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
 full/qwen3-vl-8b-instruct/_worker_logs/gpu-4.log
-  launched GPU5 pid=965749 
+  launched GPU5 pid=1001976 
 log=/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_
 full/qwen3-vl-8b-instruct/_worker_logs/gpu-5.log
+  GPU1: exit=2 (log: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
+/qwen3-vl-8b-instruct/_worker_logs/gpu-1.log)
+  GPU2: ok (log: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
+/qwen3-vl-8b-instruct/_worker_logs/gpu-2.log)
+  GPU4: ok (log: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
+/qwen3-vl-8b-instruct/_worker_logs/gpu-4.log)
+  GPU5: ok (log: 
+/home/mhormazabal/storage/projects/summer-school-agentic-rag/data/extracted_full
+/qwen3-vl-8b-instruct/_worker_logs/gpu-5.log)
+  merged 1 new failure entries into _failures.jsonl
+
+Done in 669.4min: pending 1793 → 1

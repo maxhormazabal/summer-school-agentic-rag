@@ -27,6 +27,19 @@ from src.common.logging import console
 from src.extraction.vlm_extractor import _SYSTEM_PROMPT
 from src.ontology.schema import MatchExtraction
 
+# Qwen3-VL tends to stop after the TITULARS column and omit the separate SUPLENTS
+# block entirely (observed: ~92% of team-sides had zero subs in the first full run,
+# vs 2-8 subs/team with GPT-4o). GPT-4o needs no such nudge; this emphasis is local
+# to the Qwen backend and is appended to the shared _SYSTEM_PROMPT verbatim.
+_SUPLENTS_EMPHASIS = (
+    "\n\nCRITICAL: Each team has TWO player lists — TITULARS (starters) AND a "
+    "separate SUPLENTS (substitutes) block, usually below or beside the starters. "
+    "You MUST extract EVERY row of the SUPLENTS list as a lineup entry with "
+    'role="sub". Do not stop after the starters. A team typically has several '
+    "substitutes; returning zero substitutes is almost always an extraction error."
+)
+_SYSTEM_PROMPT_LOCAL = _SYSTEM_PROMPT + _SUPLENTS_EMPHASIS
+
 DEFAULT_MODEL_ID = os.environ.get("VLM_LOCAL_MODEL_ID", "Qwen/Qwen3-VL-8B-Instruct")
 DEFAULT_MAX_NEW_TOKENS = int(os.environ.get("VLM_LOCAL_MAX_NEW_TOKENS", "4096"))
 DEFAULT_CORRECTION_ATTEMPTS = int(os.environ.get("VLM_LOCAL_CORRECTION_ATTEMPTS", "2"))
@@ -51,6 +64,17 @@ def _strip_to_json(text: str) -> str:
     if "{" in text and "}" in text:
         text = text[text.index("{") : text.rindex("}") + 1]
     return text
+
+
+def _repair_trailing_commas(text: str) -> str:
+    """Strip commas that sit directly before a closing brace/bracket.
+
+    Qwen3-VL deterministically emits a trailing comma on some reports (e.g. 75.png),
+    which the strict JSON parser rejects and the self-correction loop reproduces. A
+    trailing comma before `}`/`]` is never valid JSON, so removing it is a safe salvage.
+    Applied only after a strict parse has already failed.
+    """
+    return re.sub(r",(\s*[}\]])", r"\1", text)
 
 
 def _load() -> tuple[object, object]:
@@ -167,7 +191,7 @@ def extract(image_path: Path) -> MatchExtraction:
     user_prompt = _build_user_prompt()
 
     messages = [
-        {"role": "system", "content": _SYSTEM_PROMPT},
+        {"role": "system", "content": _SYSTEM_PROMPT_LOCAL},
         {
             "role": "user",
             "content": [
@@ -187,6 +211,12 @@ def extract(image_path: Path) -> MatchExtraction:
             return MatchExtraction.model_validate_json(candidate)
         except ValidationError as exc:
             last_error = exc
+            repaired = _repair_trailing_commas(candidate)
+            if repaired != candidate:
+                try:
+                    return MatchExtraction.model_validate_json(repaired)
+                except ValidationError:
+                    pass
             if attempt >= DEFAULT_CORRECTION_ATTEMPTS:
                 break
             messages.append({"role": "assistant", "content": raw})
