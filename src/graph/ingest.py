@@ -5,7 +5,7 @@ from pathlib import Path
 
 from src.common import ids as ID
 from src.common.logging import console
-from src.common.paths import EXTRACTED_DIR
+from src.common.paths import EXTRACTED_DIR, EXTRACTED_FULL_DIR
 from src.graph.neo4j_client import Neo4jClient
 from src.ontology.schema import CardTargetKind, MatchExtraction
 
@@ -193,6 +193,66 @@ def ingest_all() -> dict[str, int]:
         console.print(f"[green]Done: {jf.name}[/green]")
 
     # Return counts per label
+    counts: dict[str, int] = {}
+    with Neo4jClient() as client:
+        for label in ["Match", "Team", "Player", "Coach", "Stadium", "Referee", "Goal", "Card"]:
+            result = client.run_read(f"MATCH (n:{label}) RETURN count(n) AS c")
+            counts[label] = result[0]["c"] if result else 0
+    return counts
+
+
+def _resolve_full_dir(directory: Path | None) -> Path:
+    """Resolve the directory holding the bulk JSONs.
+
+    Bulk outputs are model-namespaced: ``data/extracted_full/<model-tag>/*.json``.
+    If ``directory`` already holds JSONs use it; otherwise descend into the single
+    model-tag subdir that contains JSONs. Raises if the choice is ambiguous so the
+    caller passes an explicit path rather than ingesting the wrong model's output.
+    """
+    base = Path(directory) if directory is not None else EXTRACTED_FULL_DIR
+    if any(base.glob("*.json")):
+        return base
+    if not base.exists():
+        return base
+    candidates = [
+        d for d in sorted(base.iterdir())
+        if d.is_dir() and not d.name.startswith("_") and any(d.glob("*.json"))
+    ]
+    if len(candidates) == 1:
+        return candidates[0]
+    if len(candidates) > 1:
+        names = ", ".join(d.name for d in candidates)
+        raise ValueError(
+            f"Multiple model-tag subdirs with JSONs under {base} ({names}); "
+            "pass an explicit `directory=` to disambiguate."
+        )
+    return base
+
+
+def ingest_full(directory: Path | None = None, progress_every: int = 100) -> dict[str, int]:
+    """Ingest the bulk dataset (`data/extracted_full/<model-tag>/*.json`).
+
+    Mirrors :func:`ingest_all` exactly — same labels, same deterministic IDs via
+    `src.common.ids`, same MERGE-based `ingest_match` — only the source directory and
+    progress logging differ. `ingest_all` (the 3-example path used by `tutorial.py`)
+    is left untouched.
+    """
+    src_dir = _resolve_full_dir(directory)
+    json_files = sorted(src_dir.glob("*.json"))
+    if not json_files:
+        console.print(
+            f"[yellow]No JSONs found under {src_dir}. Download/extract the bulk dataset first.[/yellow]"
+        )
+        return {}
+
+    total = len(json_files)
+    console.print(f"[cyan]Ingesting {total} match reports from {src_dir}...[/cyan]")
+    for i, jf in enumerate(json_files, 1):
+        data = MatchExtraction.model_validate_json(jf.read_text(encoding="utf-8"))
+        ingest_match(data)
+        if i % progress_every == 0 or i == total:
+            console.print(f"[green]  ingested {i}/{total}[/green]")
+
     counts: dict[str, int] = {}
     with Neo4jClient() as client:
         for label in ["Match", "Team", "Player", "Coach", "Stadium", "Referee", "Goal", "Card"]:
