@@ -4,3 +4,4 @@
 data/
 out/images_full.zip
 out/extracted_full.zip
+.DS_Store
