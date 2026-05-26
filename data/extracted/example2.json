@@ -1,6 +1,6 @@
 {
   "journey": 29,
-  "competition": "FCF",
+  "competition": "Primera Divisió Femení",
   "status": "ACTA TANCADA",
   "score_home": 1,
   "score_away": 0,
@@ -80,63 +80,63 @@
       {
         "player": {
           "name": "KAI",
-          "jersey": 12
+          "jersey": 11
         },
         "role": "starter"
       },
       {
         "player": {
           "name": "GONZALO SÁNCHEZ, LAIA",
-          "jersey": 13
+          "jersey": 12
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "RAYA CASTRO, MARIA FE",
-          "jersey": 14
+          "jersey": 13
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "LORENZO RODRIGUEZ, LUCIA",
-          "jersey": 15
+          "jersey": 14
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "UCHA FRANCO, DANIELA",
-          "jersey": 16
+          "jersey": 15
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "GONZALEZ PIQUE, ANNA",
-          "jersey": 17
+          "jersey": 16
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "GARCÍA ÁLVAREZ, DANIELA",
-          "jersey": 18
+          "jersey": 17
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "LLORENTE GARRIDO, PAULA",
-          "jersey": 19
+          "jersey": 18
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "MALDONADO SABADO, CLAUDIA",
-          "jersey": 21
+          "jersey": 19
         },
         "role": "sub"
       }
@@ -157,7 +157,7 @@
     "lineup": [
       {
         "player": {
-          "name": "DE PAOLI GONZALEZ, MERITXELL",
+          "name": "DE PAOLI GONZÁLEZ, MERITXELL",
           "jersey": 1
         },
         "role": "starter"
@@ -192,14 +192,14 @@
       },
       {
         "player": {
-          "name": "COMAS ANGELATS, JULIA",
+          "name": "COMAS ANGELATS, JÚLIA",
           "jersey": 6
         },
         "role": "starter"
       },
       {
         "player": {
-          "name": "SANCHEZ ANGELATS, REINE",
+          "name": "SÁNCHEZ ANGELATS, REINE",
           "jersey": 7
         },
         "role": "starter"
@@ -228,35 +228,35 @@
       {
         "player": {
           "name": "MASSO MUSTERA, NURIA",
-          "jersey": 12
+          "jersey": 11
         },
         "role": "starter"
       },
       {
         "player": {
-          "name": "LOZADA SANCHEZ, DINORAH ROSALY",
-          "jersey": 13
+          "name": "LOZADA SÁNCHEZ, DINORAH ROSALY",
+          "jersey": 12
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "ALSINA LOBO, LAIA",
-          "jersey": 14
+          "jersey": 13
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "LOPEZ TORRAMADE, MARTA",
-          "jersey": 15
+          "jersey": 14
         },
         "role": "sub"
       },
       {
         "player": {
           "name": "LLOSA ALVAREZ, MARTA",
-          "jersey": 17
+          "jersey": 15
         },
         "role": "sub"
       }
@@ -286,7 +286,7 @@
       "minute": 75,
       "color": "yellow",
       "target_kind": "player",
-      "target_name": "DE PAOLI GONZALEZ, MERITXELL",
+      "target_name": "DE PAOLI GONZÁLEZ, MERITXELL",
       "team": "away"
     }
   ]

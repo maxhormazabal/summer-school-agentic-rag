@@ -1,6 +1,6 @@
 {
   "journey": 29,
-  "competition": "FCF",
+  "competition": "Primera Divisió Femení",
   "status": "ACTA TANCADA",
   "score_home": 0,
   "score_away": 6,
@@ -9,7 +9,7 @@
     "lineup": [
       {
         "player": {
-          "name": "SÁNCHEZ ZACARÉN, AÍDA",
+          "name": "SÁNCHEZ AZCÁREN, AÍDA",
           "jersey": 1
         },
         "role": "starter"
@@ -23,7 +23,7 @@
       },
       {
         "player": {
-          "name": "NUÑEZ JIMÉNEZ, ANA",
+          "name": "NÚÑEZ JAIME, ANA",
           "jersey": 3
         },
         "role": "starter"
@@ -44,7 +44,7 @@
       },
       {
         "player": {
-          "name": "CERRUITUDE SANDE, ARIANA",
+          "name": "CERRUTI DE SANDE, ARIANA",
           "jersey": 6
         },
         "role": "starter"
@@ -94,7 +94,7 @@
       {
         "player": {
           "name": "RODRIGUEZ PADILLA, ZAIRA",
-          "jersey": 13
+          "jersey": 14
         },
         "role": "sub"
       }
@@ -125,7 +125,7 @@
       },
       {
         "player": {
-          "name": "FONTANET RUBIÓ, YAIZA",
+          "name": "FONTANET RUBIO, YAIZA",
           "jersey": 3
         },
         "role": "starter"
@@ -160,7 +160,7 @@
       },
       {
         "player": {
-          "name": "MONJE SOLÀ, CRISTINA",
+          "name": "MONJE SOLA, CRISTINA",
           "jersey": 8
         },
         "role": "starter"
@@ -176,13 +176,6 @@
         "player": {
           "name": "GARCIA MOTA, MAR",
           "jersey": 10
-        },
-        "role": "starter"
-      },
-      {
-        "player": {
-          "name": "ESPADA RUBIO, FIONA",
-          "jersey": 11
         },
         "role": "starter"
       },
@@ -257,18 +250,18 @@
       "type": "regular"
     },
     {
-      "minute": 81,
-      "scoreline_home": 0,
-      "scoreline_away": 5,
-      "scorer_name": "PARRA MOLINA, MARTA",
-      "scoring_team": "away",
-      "type": "regular"
-    },
-    {
       "minute": 87,
       "scoreline_home": 0,
       "scoreline_away": 6,
       "scorer_name": "DEL TORO GUARDIA, ABRIL",
+      "scoring_team": "away",
+      "type": "regular"
+    },
+    {
+      "minute": 67,
+      "scoreline_home": 0,
+      "scoreline_away": 5,
+      "scorer_name": "PARRA MOLINA, MARTA",
       "scoring_team": "away",
       "type": "regular"
     }

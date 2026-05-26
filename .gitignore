@@ -5,3 +5,4 @@ data/
 out/images_full.zip
 out/extracted_full.zip
 .DS_Store
+out/agent_traces/*
