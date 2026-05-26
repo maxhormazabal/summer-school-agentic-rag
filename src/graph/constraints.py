@@ -10,10 +10,18 @@ _CONSTRAINTS = [
     "CREATE CONSTRAINT referee_id IF NOT EXISTS FOR (r:Referee) REQUIRE r.id IS UNIQUE",
 ]
 
+# Full-text (Lucene) index over entity ids, powering fuzzy name resolution in
+# agent.tools.find_entity (tolerant to typos, word order and partial names).
+_FULLTEXT_INDEX = (
+    "CREATE FULLTEXT INDEX entity_name_ft IF NOT EXISTS "
+    "FOR (n:Team|Player|Coach|Stadium|Referee) ON EACH [n.id]"
+)
+
 
 def apply() -> None:
-    """Apply uniqueness constraints (idempotent via IF NOT EXISTS)."""
+    """Apply uniqueness constraints and the entity-name full-text index (idempotent)."""
     with Neo4jClient() as client:
         for stmt in _CONSTRAINTS:
             client.run_write(stmt)
-    console.print("[green]Constraints applied.[/green]")
+        client.run_write(_FULLTEXT_INDEX)
+    console.print("[green]Constraints + search index applied.[/green]")

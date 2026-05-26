@@ -6,11 +6,13 @@ Este repositorio implementa un tutorial end-to-end (versión escrita en Colab) q
 2. Poblar un **grafo Neo4J** desde PDFs usando un **VLM** (sin OCR, solo visión).
 3. Construir un **agente** que responde preguntas en lenguaje natural traduciéndolas a Cypher con tool-calling.
 
-## Estado actual (2026-05-23)
+## Estado actual (2026-05-26)
 
-- Las **5 etapas originales** (§1–8 de PLAN.md) están completas con un dataset de 3 actas de ejemplo en `data/documents/`.
-- En curso: **pivot al dataset oficial completo** de 1793 actas (`data/pages1793/`), con un swap planificado de OpenAI GPT-4o a un **VLM local** corriendo en servidor GPU. Detalles en PLAN.md §10–§13.
-- En curso: **split del tutorial en dos partes** — Part 1 (laboratorio interactivo, 3 actas) + Part 2 (operacional, 1793 actas). Detalles en PLAN.md §12.
+- **Vuelta a OpenAI GPT en los notebooks** (revierte el pivot Qwen §15): extracción = `gpt-4o` (visión), agente = `gpt-4o-mini`. El código `src/` ya era backend-agnóstico (`src/common/llm.py` default OpenAI); solo se reescribieron los notebooks (sin llama.cpp/GGUF/servidor). Detalles en PLAN.md §16.
+- **Notebooks validados end-to-end contra AuraDB cloud + OpenAI reales**: `summer_school_part1_solutions.ipynb` (7/7 ✅) y `summer_school_document_agentic_rag_tutorial.ipynb` (0 excepciones; Part 1 con esqueletos→❌ por diseño; Part 2 ingesta ~1795 matches del dataset 1793). Notebook legacy `tutorial.ipynb` **borrado**.
+- **Búsqueda robusta del agente** (no overfitting): herramienta `find_entity` (índice full-text Lucene + cobertura de tokens + Levenshtein APOC), Cypher **parametrizado** en `run_cypher`/`validate_cypher`, y esquema del grafo inyectado en el system prompt. Tolera apóstrofos/acentos/sufijos/orden/typos.
+- **Ingest optimizado**: `ingest_match` usa `UNWIND` (≈5 statements/acta vs ~30) + driver único reutilizado → 1793 actas de ~105 min a ~10 min sobre cloud.
+- Las **5 etapas originales** (§1–8) y el **split Part 1/Part 2** siguen vigentes; el dataset 1793 se descarga precomputado desde GDrive (PLAN.md §11).
 
 ## Antes de tocar nada
 
@@ -65,7 +67,7 @@ Si estás corriendo este repo en un servidor con GPU y debes producir los artefa
 
 ## Stack rápido
 
-Python 3.11+ · OpenAI (`gpt-4o`, sólo para demo y agente) · VLM local (server, swap pendiente) · Neo4J 5 (Aura) · Pydantic v2 · `pdf2image` (+poppler) · `graphviz` · `pyvis` · `rich` · `tenacity`.
+Python 3.11+ · OpenAI (`gpt-4o` extracción/visión, `gpt-4o-mini` agente) · Neo4J 5 (Aura, con APOC + índice full-text) · Pydantic v2 · `pdf2image` (+poppler) · `graphviz` · `pyvis` · `rich` · `tenacity`. (El backend `local` de `src/common/llm.py` sigue disponible pero los notebooks usan OpenAI.)
 
 ## Layouts de datos
 

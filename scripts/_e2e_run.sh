@@ -5,13 +5,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# OpenAI key from .env (line: OPENAI_API_KEY=sk-...)
+# Credentials come from .env (cloud AuraDB + OpenAI) — same path as Colab uses get_secret().
+# The notebook credential cell skips its placeholders, so these .env values win via get_secret.
 export OPENAI_API_KEY="$(grep -E '^OPENAI_API_KEY=' .env | cut -d= -f2-)"
-# Local throwaway Neo4j (overrides the dead Aura entries in .env via os.environ precedence)
-export NEO4J_URI="bolt://localhost:7687"
-export NEO4J_USERNAME="neo4j"
-export NEO4J_PASSWORD="testpassword123"
-export NEO4J_DATABASE="neo4j"
 # gdown CLI for the Part 2 download cell
 export PATH="$PWD/.venv/bin:$PATH"
 

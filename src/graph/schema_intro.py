@@ -32,10 +32,13 @@ Relationships:
 - (Coach)-[:COACHED {match_id}]->(Team)
 
 Search conventions:
-- IDs are normalised names: no accents, UPPERCASE, collapsed whitespace.
-- To search by player or team name use: WHERE p.id CONTAINS toUpper('name')
-- Example: MATCH (p:Player) WHERE p.id CONTAINS toUpper('garcia') RETURN p.name
-- For partial text filters you can also use: WHERE toLower(p.name) CONTAINS toLower('garcia')
+- IDs are normalised names: no accents, UPPERCASE, collapsed whitespace, including the club
+  suffix (teams look like "CIRERA, U.D. A"; players are "SURNAME(S), FIRSTNAME").
+- Do NOT guess ids or compare raw names. To find a team, player, coach, stadium or referee by
+  name, call find_entity first; it returns the canonical id.
+- Then match by exact id passed as a query PARAMETER, e.g.
+  MATCH (t:Team) WHERE t.id = $tid RETURN t   with params {tid: <id from find_entity>}.
+- Always pass literal values as parameters ($name); never inline them into the query text.
 """
 
 

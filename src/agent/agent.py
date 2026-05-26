@@ -6,7 +6,13 @@ from datetime import datetime
 from pathlib import Path
 
 from src.agent.prompts import build_messages
-from src.agent.tools import TOOL_SPECS, get_graph_schema, validate_cypher, run_cypher
+from src.agent.tools import (
+    TOOL_SPECS,
+    find_entity,
+    get_graph_schema,
+    run_cypher,
+    validate_cypher,
+)
 from src.common.config import get_secret
 from src.common.logging import console
 from src.common.paths import TRACES_DIR
@@ -21,12 +27,13 @@ class AgentResult:
 
 _TOOL_FN_MAP = {
     "get_graph_schema": lambda args: get_graph_schema(),
-    "validate_cypher": lambda args: validate_cypher(args["query"]),
-    "run_cypher": lambda args: run_cypher(args["query"]),
+    "find_entity": lambda args: find_entity(args["name"], args.get("label")),
+    "validate_cypher": lambda args: validate_cypher(args["query"], args.get("params")),
+    "run_cypher": lambda args: run_cypher(args["query"], args.get("params")),
 }
 
 
-def ask(question: str, max_iterations: int = 5) -> AgentResult:
+def ask(question: str, max_iterations: int = 8) -> AgentResult:
     """Ask a natural language question; the agent translates it to Cypher and responds."""
     from rich.panel import Panel
     from rich.syntax import Syntax
@@ -99,6 +106,13 @@ def ask(question: str, max_iterations: int = 5) -> AgentResult:
                 console.print(Syntax(query, "cypher", theme="monokai", word_wrap=True))
             elif fn_name == "get_graph_schema":
                 console.print(f"[dim][Iter {iteration}][/dim] get_graph_schema called")
+            elif fn_name == "find_entity":
+                cands = result.get("matches", [])
+                top = ", ".join(f"{m['id']}({m['score']:.2f})" for m in cands[:3]) or "—"
+                console.print(
+                    f"[dim][Iter {iteration}][/dim] [magenta]find_entity[/magenta] "
+                    f"'{fn_args.get('name','')}' → {top}"
+                )
 
             result_str = json.dumps(result, ensure_ascii=False)
             messages.append({

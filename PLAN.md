@@ -809,11 +809,11 @@ Marca cada ítem con `[x]` sólo cuando se cumpla.
   - `extracted_full.zip` (2.4M, 1793 JSON) → GDrive ID `1GWH8lCd7TQV8g6N16intWJ5AFhpCU0FX`
   - En §11.3: `PNG_ZIP_GDRIVE_ID = "1FSBFc6nijVjApTh4YoP0seI8lOpBL6Xc"`, `JSON_ZIP_GDRIVE_ID = "1GWH8lCd7TQV8g6N16intWJ5AFhpCU0FX"`.
 - [~] **§11.3 Notebook rewire** (data-swap hecho; preguntas del agente = "el resto", pendientes con el usuario): en `summer_school_document_agentic_rag_tutorial.ipynb` se patchearon 14 celdas (script one-off `scripts/_nb_swap.py`): cell 10 baja los 2 zips de GDrive (IDs §11) y descomprime en ROOT (idempotente, skip por conteo de archivos en el content-dir real, no el padre); cells 19/23 demo VLM en vivo sobre 1 PNG (GPT-4o) + nota "1793 ya precomputadas"; cell 20 aclara que el bulk usó Qwen3-VL+SUPLENTS; cells 24-29 review/quality muestrean del set masivo (stems fijos 10/75, ordenado); cells 34-35 `ingest_all`→`ingest_full()` + asserts duros→suaves; cell 37 idempotencia sobre slice de 20 (no re-ingesta 1793). Código: `src/graph/ingest.py::ingest_full(directory=None)` (autodetecta subdir model-tag; `ingest_all` intacto). Lógica validada localmente contra datos reales (skip-download, `_JSON_DIR`, show_match, quality-loop, file-discovery). **Sin validar end-to-end en Colab** (gdown/OpenAI/Neo4j) — pendiente correrlo allá. Supuesto: `gdown` preinstalado en Colab (el notebook original ya dependía de eso; no está en requirements.txt). **Preguntas del agente (cells 46-57) SIN tocar.**
-- [ ] **§11.4 Aceptación rewire**: notebook corre end-to-end en Colab sin error, ≤5 llamadas OpenAI fuera del agente.
+- [x] **§11.4 Aceptación rewire** (validado 2026-05-26 vía nbconvert contra AuraDB cloud + OpenAI reales; ver §16.4): canónico corre top-to-bottom **0 excepciones**, Part 1 ~4 llamadas OpenAI fuera del agente (3 extracción gpt-4o + 1 ping), Part 2 ingesta ~1795. Confirmación literal en Colab queda al usuario.
 - [x] **Backend LLM agnóstico** (2026-05-24): nuevo `src/common/llm.py::get_client_and_model(role)` — cada rol (`extraction`/`agent`) elige backend `openai`|`local` por env (`{ROLE}_BACKEND`, opcional `{ROLE}_MODEL`; local vía `LOCAL_VLLM_BASE_URL`/`_MODEL`/`_API_KEY`). Default = OpenAI `gpt-4o` → **backward-compatible** (Part 2 y `tutorial.py` intactos, no setean env). `vlm_extractor.extract()` y `agent.ask()` editados para usar el resolver. `agent.ask()` además detecta el caso vLLM-sin-tool-parser (`[TOOL_CALLS]` como texto con `tool_calls` vacío) y lanza error claro en vez de devolver basura. **Endpoint `http://158.109.8.116:8000/v1` (Pixtral-12B vía vLLM) verificado**: chat texto ✅; tools ⚠️ (vuelve como texto, falta `--enable-auto-tool-choice --tool-call-parser mistral` en el server); visión sobre PNG real ❌ (HTTP 500/timeout siempre, con/sin schema). → hoy solo OpenAI corre end-to-end; el código local queda listo para cuando se arregle el server.
 - [x] **§12 TODOs Part 1**: requisito del usuario = modelos elegibles/agnósticos al inicio (extracción + agente, cualquier combo). 4 ejercicios fill-in-the-blank diseñados (ontología `Goal`, `quality_check`, query Cypher goles/equipo, agente: pregunta NL + tono), cada uno con celda de validación ✅/❌.
 - [x] **§12.4 Part 1 creado — DENTRO del notebook canónico** (NO archivo aparte; el usuario lo aclaró): `summer_school_document_agentic_rag_tutorial.ipynb` ahora tiene 55 celdas en un solo flujo top-to-bottom: **setup compartido** (credenciales + selección de backend agnóstico + connectivity backend-aware) → **`# Part 1 — Interactive Lab`** (3 ejemplos de `data/`, sin descarga; 4 ejercicios fill-in-the-blank con check ✅/❌: ontología `Goal`, `quality_check`, query Cypher goles/equipo, agente pregunta+tono; usa `ingest_all` sobre los 3) → **`# Part 2 — At Scale`** (descarga zips 1793 de GDrive, `ingest_full`, graph viz, 2 preguntas del agente + traza, conclusión). Reset del system-prompt al entrar a Part 2 (evita que el experimento de tono de P1 ej.B contamine P2). Construido vía scripts one-off `scripts/_build_part1.py` (genera el lab) + `scripts/_merge_parts.py` (fusiona lab+escala en el canónico). Lógica de ejercicios+checks validada localmente (esqueletos→❌ sin crash, soluciones→✅). **Sin validar en Colab**: `render_ontology` (necesita `dot`), `ingest_*`/`run_cypher`/`ask` (Neo4j/OpenAI) — espejan celdas/funciones ya probadas. El archivo standalone `summer_school_part1_lab.ipynb` fue borrado (`git status: D`).
-- [ ] **§12.5 Aceptación split**: Part 1 corre sin error en Colab en ≤15 min, cada TODO tiene solución que valida. **(pendiente: validación end-to-end en Colab por el usuario)**
+- [x] **§12.5 Aceptación split** (validado 2026-05-26 vía nbconvert contra cloud; ver §16.4): `summer_school_part1_solutions.ipynb` corre **7/7 ✅** (cada TODO con solución que valida); el canónico ejecuta los esqueletos de Part 1 con ❌ por diseño sin crashear. Confirmación literal en Colab (y tiempo ≤15 min) queda al usuario.
 
 ---
 
@@ -845,3 +845,38 @@ Marca cada ítem con `[x]` sólo cuando se cumpla.
 
 - **Validado localmente**: ambos notebooks parsean, todas las celdas compilan; soluciones de los 4 ejercicios pasan contra `data/extracted/example*.json` reales; esqueletos fallan con ❌ sin crashear.
 - [ ] **Pendiente (Colab, GPU)**: build llama.cpp CUDA; extracción visión vía `response_format` json_schema→grammar; tool-calling del agente 2B vía `--jinja` (riesgo: parser Qwen3.5 muy nuevo → si vuelve como texto, el guard de `agent.py` lo detecta); swap de VRAM; tiempo total de setup (~10 min, contra el target ≤15 min de §12.5).
+
+> **NOTA (2026-05-26): §15 (Qwen in-Colab) queda SUPERSEDIDA por §16.** El usuario revirtió la decisión: los notebooks vuelven a OpenAI GPT. El backend `local` de `src/common/llm.py` y los scripts GPU siguen existiendo (backward-compatible) pero los notebooks ya no los usan.
+
+---
+
+## 16. Vuelta a OpenAI GPT + búsqueda robusta del agente (2026-05-26)
+
+> **Requisito del usuario**: "todo use gpt". Revierte §15 (Qwen3.5/llama.cpp in-Colab). Modelos elegidos: **`gpt-4o` extracción (visión)**, **`gpt-4o-mini` agente**. Validado end-to-end contra AuraDB cloud + OpenAI reales (no local Docker — el usuario quiere fidelidad Colab).
+
+### 16.1 Notebooks → OpenAI
+
+- Generador one-off `scripts/_build_openai_notebooks.py`: sobre los notebooks Qwen, reemplaza/elimina por marcador las celdas de infra de modelos (credenciales OpenAI+Neo4j, elección de modelo `EXTRACTION_MODEL=gpt-4o`/`AGENT_MODEL=gpt-4o-mini`, bootstrap sin build-deps, connectivity OpenAI+Neo4j) y borra build llama.cpp / descarga GGUF / servidor / swap de VRAM / carga de modelos. Narrativas (header/intro/conclusión) reescritas a GPT con un segundo pase.
+- `NEO4J_DATABASE` queda como **placeholder** (no se exporta si no se cambia) → en este AuraDB la base se llama por el instance-id, no `neo4j`; dejarlo vacío usa la base por defecto del servidor. (ver memoria `reference-auradb-instance`).
+- `tutorial.ipynb` (legacy) **borrado**. El código `src/` no necesitó cambios para GPT (ya default OpenAI vía `src/common/llm.py`).
+
+### 16.2 Búsqueda robusta del agente (sin overfitting al prompt)
+
+Disparado porque el agente rompía nombres con apóstrofo ("L'Estartit") interpolados en strings Cypher. El usuario rechazó parches de prompt por-caso. Solución genérica:
+
+1. **`src/agent/tools.py::find_entity(name, label=None)`** — resuelve texto libre → `id` canónico. Índice full-text Lucene (`entity_name_ft`, creado en `constraints.apply()`) + cobertura de tokens (0.6) + `apoc.text.levenshteinSimilarity` (0.4). Tolera acentos, apóstrofos, sufijos de club, orden de palabras y typos. Parametrizado (`db.index.fulltext.queryNodes` vía `run_read`, no pasa por el guard read-only). Añadida a `TOOL_SPECS` y a `agent._TOOL_FN_MAP`.
+2. **Cypher parametrizado** (PLAN §6.5): `run_cypher`/`validate_cypher` aceptan `params`; el prompt obliga a pasar todo valor como `$name` (cero escaping/inyección). Sin reglas de apóstrofo en el prompt.
+3. **Esquema inyectado**: `prompts.build_messages` antepone `graph_schema_summary()` al system prompt → no más relaciones alucinadas (p.ej. `:HAS_EVENT`).
+4. `max_iterations` 5→8 (el paso extra `find_entity` + autocorrección de sintaxis necesita margen).
+
+### 16.3 Ingest optimizado para cloud
+
+`ingest_match(data, client=None)` reescrito con **`UNWIND`** (jugadoras/coaches/goles/tarjetas en 1 statement cada categoría; ~5 round-trips/acta vs ~30) y **driver único** reutilizado por `ingest_all`/`ingest_full` (helper `_count_labels`). **Medido sobre cloud: 3.5 s/acta → 0.32 s/acta; 1793 de ~105 min a ~10 min.** Mismos nodos/relaciones (verificado: score, SCORED_BY, roles starter/sub). `APPEARED_IN` ahora MERGE por endpoints + SET role/jersey (evita el error de MERGE con jersey nulo).
+
+### 16.4 Validado end-to-end (cloud real)
+
+- **`summer_school_part1_solutions.ipynb`**: 7/7 ✅ (OpenAI+Neo4j, ontología, extracción gpt-4o ×3, quality_check, query goles/equipo, agente, tono) sobre grafo limpio.
+- **`summer_school_document_agentic_rag_tutorial.ipynb`**: ejecuta top-to-bottom **0 excepciones**; Part 1 esqueletos muestran ❌ por diseño sin crashear; agente responde "1-0" y "Claudia Maldonado min 75" (apóstrofo resuelto); Part 2 ingesta **~1795 matches**.
+- Notebooks fuente quedan **limpios** (ejecutados a copias en /tmp, sin outputs horneados).
+- Harness de prueba temporal: `scripts/_e2e_test.py`, `scripts/_e2e_run.sh` (Local Dev + nbconvert kernel `ss-venv`, creds desde `.env`).
+- [~] **Pendiente (decisión usuario)**: las 2 preguntas demo de Part 2 vienen de la era 3-actas; *"el equipo que encajó 6 goles"* es ambiguo a escala 1793 (188 equipos) → respuesta verbosa pero sin crashear. Redefinir preguntas de escala (ya anotado en §11.2.5).
